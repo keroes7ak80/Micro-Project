@@ -95,8 +95,12 @@
    .model small
    .stack 64
    .data
- speed dw ? ;ball speed   
- centx dw 200
+ CurrentTime db 0
+ NextTime db 0
+ speed db ? ;ball speed 
+ VerticalFlag dw 0 ;up=0 down=1
+HorizFlag dw  1 ;right=1 left=0
+ centx dw 62
  centy dw 100
  rad   dw 15 
  row1  dw 50 
@@ -127,12 +131,55 @@
      drawline 7,70,col1,row1,0Ah      ;ocount,incount,col,row,color  ->this draw left stick
      drawline 7,70,col2,row2,0Ah     ;                              ->this draw right stick
      drawline 7,200,0,0,80         ;                              ->this draw left frame
-drawline 7,200,313,0,80       ;                              ->this draw right frame                  
+drawline 7,200,313,0,80       ;                              ->this draw right frame  
+
+
+                
    MAIN_LOOP:      
       
+;kero------>start
+ drawcir centy,centx,5,00  ;cenx,ceny,raduis,colour
+mov ah,2ch
+int 21h
+cmp CurrentTime,dl
+je Again
+
+; Change in ball direction conditions---->start
 
 
+cmp centy,5
+jne next2
+mov VerticalFlag ,1
 
+cmp centy,125
+jne next2
+mov VerticalFlag,0
+next2 :
+cmp VerticalFlag,0
+je Up
+cmp VerticalFlag,1
+je Down 
+
+Down: inc centy
+jmp next
+Up : dec centy
+next :
+cmp HorizFlag,0
+je Left
+cmp HorizFlag,1
+je Right
+
+Right:inc centx
+jmp Again
+Left:dec centx
+
+;change in ball direction conditions--->end
+Again: 
+mov CurrentTime , dl
+
+
+drawcir centy,centx,5,15  ;cenx,ceny,raduis,colour
+;kero------>end
 
 ;Dina --->start
  

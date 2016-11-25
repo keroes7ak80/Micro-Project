@@ -129,10 +129,7 @@
      drawline 7,200,0,0,80         ;                              ->this draw left frame
 drawline 7,200,313,0,80       ;                              ->this draw right frame                  
    MAIN_LOOP:      
-;kero--------
-
-
-;kero--------       
+      
 
 
 

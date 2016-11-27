@@ -98,8 +98,8 @@
  CurrentTime db 0
  NextTime db 0
  speed db ? ;ball speed 
- VerticalFlag dw 0 ;up=0 down=1
-HorizFlag dw  1 ;right=1 left=0
+ VerticalFlag dw 0 ;45 degree: up=0 down=1    30 degree: up=2 down=3
+HorizFlag dw  1 ;45 degree: right=1 left=0    30 degree: left=2 right=3
  centx dw 62
  centy dw 100
  rad   dw 15 
@@ -142,18 +142,52 @@ drawline 7,200,313,0,80       ;                              ->this draw right f
 mov ah,2ch
 int 21h
 cmp CurrentTime,dl
-je Again
+je Again1
 
 ; Change in ball direction conditions---->start
 
+cmp centx,255
+jne next3
+mov HorizFlag,0
+next3:
 
 cmp centy,5
-jne next2
+jne next4
 mov VerticalFlag ,1
-
-cmp centy,125
-jne next2
+mov HorizFlag ,3
+next4:
+cmp centy,195
+jne next7
 mov VerticalFlag,0
+again1:
+jmp Again
+;this handles movment in 30 degrees
+
+next7:
+cmp VerticalFlag,2
+je Up2
+cmp VerticalFlag,3
+je Down2 
+jmp next6
+
+Down2: add centy,2
+jmp next6
+Up2 : sub centy,2
+next6 :
+cmp HorizFlag,2
+je Left2
+cmp HorizFlag,3
+je Right2
+
+jmp next5
+Right2:add centx,2
+jmp next5
+Left2:sub centx,2
+
+next5:
+
+;this handles movment 45 degree
+
 next2 :
 cmp VerticalFlag,0
 je Up

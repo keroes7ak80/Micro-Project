@@ -1,4 +1,93 @@
+
+
+UI macro  ;entering user name 
+stay:
+
+clearscreen 
+
+
+setcursor 13,22
+
+mov ah,09
+mov dx,offset msg2
+int 21h
+
+setcursor 7,25
+     
+mov ah,09
+mov dx,offset msg1
+int 21h
+
+setcursor 8,32
+
+mov ah,0ah
+mov dx,offset buffer1
+int 21h
+
+mov bx,offset buffer1
+mov al,[bx+2]
+;1st char in [bx+2]
+mov si,offset CharArr1
+mov di,offset CharArr2
+
+mov cx,26
  
+myloop1:cmp al,[si]
+       jz nextA 
+       inc si
+       dec cx
+       jnz myloop1
+mov cx,26
+myloop2:cmp al,[di]
+       jz nextA 
+       inc di
+       dec cx
+       jnz myloop2
+       jmp stay  
+
+nextA:
+clearscreen 
+mainscreen
+  endm 
+  
+  clearscreen macro
+    mov ah,06
+    mov al,00
+    mov bh,07
+    mov ch,00
+    mov cl,00
+    mov dh,24
+    mov dl,79
+    int 10h   
+    endm
+ setcursor macro row,col
+    mov ah,02
+    mov al,00
+    mov bh,00
+    mov dh,row
+    mov dl,col
+    int 10h  
+    endm 
+
+ mainscreen macro
+ setcursor 7,25   
+ mov ah,09
+ mov dx,offset msg4
+ int 21h      
+ 
+ setcursor 8,25
+ mov ah,09
+ mov dx,offset msg5
+ int 21h      
+ 
+ setcursor 9,25    
+ mov ah,09
+ mov dx,offset msg6
+ int 21h 
+ 
+ endm
+
+
  drawline macro ocount,incount,col,row,color   ;this macro draw lines(vetical or horizontal)
     local myloop1,myloop2
       
@@ -89,12 +178,23 @@
      mov rad1,ax
      dec rad2
      jnz myloop10
-        
-   
+          
     endm
    .model small
    .stack 64
    .data
+;interface
+msg1 db 'please enter your name','$'
+buffer1 db 16,?,16 dup(?)
+ 
+CharArr1 db  'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+CharArr2 db 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' 
+msg2 db 'please enter key to continue','$'
+;to do : put the three msgs in one msg 
+ msg4 db 'to start chatting press f1','$'
+ msg5 db 'to start game press f2','$'
+ msg6 db 'to start end the program press ESC','$'
+;Game
  CurrentTime db 0
  NextTime db 0
  speed db ? ;ball speed 
@@ -116,25 +216,40 @@ HorizFlag dw  1 ;45 degree: right=1 left=0    30 degree: left=2 right=3
  rad1  dw ?    ;inner loop
  temp4 dw ?    ;hold inner
  rad2  dw ?    ;outer loop
- ;
+ 
    .code
-   
  main proc far
      mov ax,@data
      mov ds,ax
+;inter face--------------------------------------     
+UI
+mainscreen
+myloop4: mov ah,1  ;to continue until press right key
+             int 16h   
+             jz myloop4     
+             mov ah,0
+             int 16H
+             cmp al,'e' ;F2 2Eh
+             jz clear
+             cmp al,1BH  ;ESC
+             jz escape
+            jmp myloop4  
+escape:
+mov ax,4c00h
+int 21h
      
+;game------------------------------------------
+   clear : clearscreen
      mov ah,0     ;change to graphic mode
      mov al,13h
      int 10h 
-        
-                            
-     drawline 7,70,col1,row1,0Ah      ;ocount,incount,col,row,color  ->this draw left stick
-     drawline 7,70,col2,row2,0Ah     ;                              ->this draw right stick
+
+        drawline 7,70,col1,row1,0Ah      ;ocount,incount,col,row,color  ->this draw left stick
+     drawline 7,70,col2,row2,0Ah;                              ->this draw right stick
      drawline 7,200,0,0,80         ;                              ->this draw left frame
-drawline 7,200,313,0,80       ;                              ->this draw right frame  
+     drawline 7,200,313,0,80       ;                              ->this draw right frame 
+         
 
-
-                
    MAIN_LOOP:      
       
 ;kero------>start
@@ -218,7 +333,6 @@ drawcir centy,centx,5,15  ;cenx,ceny,raduis,colour
 ;Dina --->start
  
 
- 
 MY_LOOP:
 
 mov ah,1
@@ -264,9 +378,12 @@ cmp row2 , 130
 je MY_LOOP
 call MoveDOWN2
 jmp MAIN_LOOP
+ main endp
 
-     main endp
- 
+
+
+
+
  MoveUP1 proc  
      drawline 7,70,col1,row1,00h      ;ocount,incount,col,row,color  ->this draw left stick
      drawline 7,70,col2,row2,00h

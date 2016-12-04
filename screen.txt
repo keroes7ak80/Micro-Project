@@ -1,0 +1,79 @@
+  .model small
+  .stack 64
+  .data
+msg1 db 'please enter your name','$'
+buffer1 db 16,?,16dup(0ffh)
+msg2 db 'please enter key to continue','$' 
+arr1 db  'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' 
+  .code
+main proc far
+     mov ax,@data
+     mov ds,ax
+
+stay:
+mov ah,06
+mov al,00
+mov bh,07
+mov ch,00
+mov cl,00
+mov dh,24
+mov dl,79
+int 10h     
+ 
+mov ah,02
+mov bh,00
+mov dh,7
+mov dl,25
+int 10h
+     
+mov ah,09
+mov dx,offset msg1
+int 21h
+
+mov ah,02
+mov bh,00
+mov dh,8
+mov dl,32
+int 10h
+
+
+mov ah,0ah
+mov dx,offset buffer1
+int 21h
+
+mov bx,offset buffer1
+mov al,[bx+2]
+;1st char in [bx+2]
+mov si,offset arr1
+mov cx,52
+ 
+myloop:cmp al,[si]
+       jz next 
+       inc si
+       dec cx
+       jnz myloop
+       jmp stay  
+next:mov ah,06     ;to next screen
+     mov al,00
+     mov bh,07
+     mov ch,00
+     mov cl,00
+     mov dh,24
+     mov dl,79
+    int 10h     
+ 
+main endp
+     end main
+     
+     
+     
+;mov ah,02
+;mov bh,00
+;mov dh,13
+;mov dl,25
+;int 10h
+
+ 
+;mov ah,09
+;mov dx,offset msg2
+;int 21h

@@ -158,7 +158,7 @@ jmp D5
 E2:
 cmp centy,bx
 jb C2 
-jmp D8
+jmp D5
 C2:
 
 
@@ -401,8 +401,8 @@ B33:
 D8:
 
 ;Bottom of paddle 
-mov ax,row1
-mov bx,row1
+mov ax,row2
+mov bx,row2
 add ax,20
 add bx,30
 cmp centy,ax

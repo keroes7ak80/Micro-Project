@@ -1,0 +1,2392 @@
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-1
+
+
+				SharingAxes macro
+				     mov dx,3fbh
+				     MOV Al,10000000b
+				     out dx,al
+				
+				     mov dx,3f8h
+				     mov al,18h
+				     OUT DX,al
+				
+				     MOV DX,3F9H
+				     mov al,00h
+				     OUT DX,al
+				
+				     MOV DX,3fbH
+				     mov al,00011011b
+				     OUT DX,al
+				
+				;send
+				
+				mov bx,offset row1
+				
+				;recieve
+				mov al,[si+1]
+				mov dx,3fdh
+				
+				in al,dx
+				test al,00000001b
+				jz MAIN_LOOP
+				mov dx,3f8h
+				in al,dx
+				mov [bx+1],al
+				endm
+				
+				BallMovement macro
+				
+				;top of screen
+				cmp centy,4
+				jz A1
+				jmp D1
+				A1:
+				;30 up -> -30 down
+				cmp  VerticalFlag,0
+				jnz B1
+				cmp HorizFlag,3
+				jnz B1
+				mov VerticalFlag ,1
+				mov HorizFlag,3 
+				B1:
+				;-30 up -> 30 down
+				cmp  VerticalFlag,0
+				jnz B2
+				cmp HorizFlag,2
+				jnz B2
+				mov VerticalFlag ,1
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-2
+
+
+				mov HorizFlag,2 
+				B2:
+				;45 up -> -45 down 
+				cmp  VerticalFlag,0
+				jnz B3
+				cmp HorizFlag,1
+				jnz B3
+				mov VerticalFlag ,1
+				mov HorizFlag,1 
+				B3:
+				;-45 up -> 45 down 
+				cmp  VerticalFlag,0
+				jnz B4
+				cmp HorizFlag,0
+				jnz B4
+				mov VerticalFlag ,1
+				mov HorizFlag,0 
+				B4:
+				
+				D1:
+				;--------------el lables 8alaaaaat------------ 
+				;Bottom of screen 
+				cmp centy,136
+				jz A2
+				jmp D2
+				A2:
+				;30 down -> -30 up
+				cmp  VerticalFlag,1
+				jnz B5
+				cmp HorizFlag,3
+				jnz B5
+				mov VerticalFlag ,0
+				mov HorizFlag,3 
+				B5:
+				;-30 down -> 30 up
+				cmp  VerticalFlag,1
+				jnz B6
+				cmp HorizFlag,2
+				jnz B6
+				mov VerticalFlag ,0
+				mov HorizFlag,2 
+				B6:
+				;45 down -> -45 up 
+				cmp  VerticalFlag,1
+				jnz B7
+				cmp HorizFlag,1
+				jnz B7
+				mov VerticalFlag ,0
+				mov HorizFlag,1 
+				B7:
+				;-45 down -> 45 up 
+				cmp  VerticalFlag,1
+				jnz B8
+				cmp HorizFlag,0
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-3
+
+
+				jnz B8
+				mov VerticalFlag ,0
+				mov HorizFlag,0 
+				B8:
+				 
+				D2:
+				
+				
+				;left paddle
+				;compare col1+BarWidth+rad 
+				cmp centx , 58
+				jz A3
+				jmp D3
+				A3:
+				;center of the paddle "compare row1+20 (2/3)"
+				mov ax,row1
+				mov bx,row1
+				add ax,10
+				add bx,20
+				cmp centy,ax
+				ja E1
+				jmp D4
+				E1:
+				cmp centy,bx
+				jb C1 
+				jmp D4
+				C1:
+				;0 left -> 0 right --------------------hayt8ar 
+				fel right---------------------
+				cmp  VerticalFlag,4
+				jnz B9
+				cmp HorizFlag,0
+				jnz B9
+				mov VerticalFlag ,4
+				mov HorizFlag,1 
+				B9:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,0
+				jnz B10
+				cmp HorizFlag,0
+				jnz B10
+				mov VerticalFlag ,0
+				mov HorizFlag,1 
+				B10:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,1
+				jnz B11
+				cmp HorizFlag,0
+				jnz B11
+				mov VerticalFlag ,1
+				mov HorizFlag,1 
+				B11:
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-4
+
+
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,0
+				jnz B12
+				cmp HorizFlag,2
+				jnz B12
+				mov VerticalFlag ,0
+				mov HorizFlag,3 
+				B12:
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,1
+				jnz B13
+				cmp HorizFlag,2
+				jnz B13
+				mov VerticalFlag ,1
+				mov HorizFlag,3 
+				B13:
+				
+				D4:
+				
+				;Top of paddle ---------------------
+				mov ax,row1
+				mov bx,row1
+				add bx,10
+				cmp centy,ax
+				ja E2
+				jmp D5
+				E2:
+				cmp centy,bx
+				jb C2 
+				jmp D5
+				C2:
+				
+				
+				cmp  VerticalFlag,4
+				jnz B14
+				cmp HorizFlag,0
+				jnz B14
+				mov VerticalFlag ,1
+				mov HorizFlag, 1
+				B14:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,1
+				jnz B15
+				cmp HorizFlag,0
+				jnz B15
+				mov VerticalFlag ,1
+				mov HorizFlag,3 
+				B15:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,0
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-5
+
+
+				jnz B16
+				cmp HorizFlag,0
+				jnz B16
+				mov VerticalFlag ,0
+				mov HorizFlag,3 
+				B16:
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,1
+				jnz B17
+				cmp HorizFlag,2
+				jnz B17
+				mov VerticalFlag ,4
+				mov HorizFlag,1 
+				B17:
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,0
+				jnz B18
+				cmp HorizFlag,2
+				jnz B18
+				mov VerticalFlag ,4
+				mov HorizFlag,1 
+				B18:
+				
+				
+				D5:
+				
+				;Bottom of paddle 
+				mov ax,row1
+				mov bx,row1
+				add ax,20
+				add bx,30
+				cmp centy,ax
+				ja E3
+				jmp D6
+				E3:
+				cmp centy,bx
+				jb C3
+				jmp D6
+				C3:
+				
+				
+				cmp  VerticalFlag,4
+				jnz B19
+				cmp HorizFlag,0
+				jnz B19
+				mov VerticalFlag ,0
+				mov HorizFlag, 1
+				B19:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,0
+				jnz B20
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-6
+
+
+				cmp HorizFlag,0
+				jnz B20
+				mov VerticalFlag ,0
+				mov HorizFlag,3 
+				B20:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,1
+				jnz B21
+				cmp HorizFlag,0
+				jnz B21
+				mov VerticalFlag ,1
+				mov HorizFlag,3 
+				B21:
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,0
+				jnz B22
+				cmp HorizFlag,2
+				jnz B22
+				mov VerticalFlag ,4
+				mov HorizFlag,1 
+				B22:
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,1
+				jnz B23
+				cmp HorizFlag,2
+				jnz B23
+				mov VerticalFlag ,4
+				mov HorizFlag,1 
+				B23:
+				
+				D6:
+				D3:
+				
+				
+				
+				;Right paddle----------------------------------
+				---Right----------Right
+				;compare col2+BarWidth+rad 
+				cmp centx , 256
+				jz A4
+				jmp D7
+				A4:
+				;center of the paddle "compare row1+20 (2/3)"
+				mov ax,row2
+				mov bx,row2
+				add ax,10
+				add bx,20
+				cmp centy,ax
+				ja E4
+				jmp D9
+				E4:
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-7
+
+
+				cmp centy,bx
+				jb C4 
+				jmp D9
+				C4:
+				;0 left -> 0 right --------------------hayt8ar 
+				fel right---------------------
+				cmp  VerticalFlag,4
+				jnz B24
+				cmp HorizFlag,1
+				jnz B24
+				mov VerticalFlag ,4
+				mov HorizFlag,0 
+				B24:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,0
+				jnz B25
+				cmp HorizFlag,1
+				jnz B25
+				mov VerticalFlag ,0
+				mov HorizFlag,0 
+				B25:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,1
+				jnz B26
+				cmp HorizFlag,1
+				jnz B26
+				mov VerticalFlag ,1
+				mov HorizFlag,0 
+				B26:
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,0
+				jnz B27
+				cmp HorizFlag,3
+				jnz B27
+				mov VerticalFlag ,0
+				mov HorizFlag,2
+				B27:
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,1
+				jnz B28
+				cmp HorizFlag,3
+				jnz B28
+				mov VerticalFlag ,1
+				mov HorizFlag,2 
+				B28:
+				
+				D9:
+				
+				;Top of paddle ---------------------
+				mov ax,row2
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-8
+
+
+				mov bx,row2
+				add bx,10
+				cmp centy,ax
+				ja E5
+				jmp D8
+				E5:
+				cmp centy,bx
+				jb C5 
+				jmp D8
+				C5:
+				
+				
+				cmp  VerticalFlag,4
+				jnz B29
+				cmp HorizFlag,1
+				jnz B29
+				mov VerticalFlag ,1
+				mov HorizFlag, 0
+				B29:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,1
+				jnz B30
+				cmp HorizFlag,1
+				jnz B30
+				mov VerticalFlag ,1
+				mov HorizFlag,2 
+				B30:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,0
+				jnz B31
+				cmp HorizFlag,1
+				jnz B31
+				mov VerticalFlag ,0
+				mov HorizFlag,2 
+				B31:
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,1
+				jnz B32
+				cmp HorizFlag,3
+				jnz B32
+				mov VerticalFlag ,4
+				mov HorizFlag,0 
+				B32:
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,0
+				jnz B33
+				cmp HorizFlag,3
+				jnz B33
+				mov VerticalFlag ,4
+				mov HorizFlag,0 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-9
+
+
+				B33:
+				
+				
+				D8:
+				
+				;Bottom of paddle 
+				mov ax,row2
+				mov bx,row2
+				add ax,20
+				add bx,30
+				cmp centy,ax
+				ja E6
+				jmp D10
+				E6:
+				cmp centy,bx
+				jb C6
+				jmp D10
+				C6:
+				
+				
+				cmp  VerticalFlag,4
+				jnz B34
+				cmp HorizFlag,1
+				jnz B34
+				mov VerticalFlag ,0
+				mov HorizFlag, 0
+				B34:
+				
+				;45 up -> -45 up 
+				cmp  VerticalFlag,0
+				jnz B35
+				cmp HorizFlag,1
+				jnz B35
+				mov VerticalFlag ,0
+				mov HorizFlag,2 
+				B35:
+				
+				;-45 down -> 45 down 
+				cmp  VerticalFlag,1
+				jnz B36
+				cmp HorizFlag,1
+				jnz B36
+				mov VerticalFlag ,1
+				mov HorizFlag,2 
+				B36:
+				
+				;30 up -> -30 up 
+				cmp  VerticalFlag,0
+				jnz B37
+				cmp HorizFlag,3
+				jnz B37
+				mov VerticalFlag ,4
+				mov HorizFlag,0 
+				B37:
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-10
+
+
+				
+				;-30 down -> 30 down 
+				cmp  VerticalFlag,1
+				jnz B38
+				cmp HorizFlag,3
+				jnz B38
+				mov VerticalFlag ,4
+				mov HorizFlag,0 
+				B38:
+				
+				D10:
+				
+				
+				D7:
+				 endm 
+				
+				UI macro  ;entering user name 
+				stay:
+				
+				clearscreen 
+				
+				
+				setcursor 13,22
+				
+				mov ah,09
+				mov dx,offset msg2
+				int 21h
+				
+				setcursor 7,25
+				     
+				mov ah,09
+				mov dx,offset msg1
+				int 21h
+				
+				setcursor 8,32
+				
+				mov ah,0ah
+				mov dx,offset buffer1
+				int 21h
+				
+				mov bx,offset buffer1
+				mov al,[bx+2]
+				;1st char in [bx+2]
+				mov si,offset CharArr1
+				mov di,offset CharArr2
+				
+				mov cx,26
+				 
+				myloop1:cmp al,[si]
+				       jz nextA 
+				       inc si
+				       dec cx
+				       jnz myloop1
+				mov cx,26
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-11
+
+
+				myloop2:cmp al,[di]
+				       jz nextA 
+				       inc di
+				       dec cx
+				       jnz myloop2
+				       jmp stay  
+				
+				nextA:
+				clearscreen 
+				mainscreen
+				  endm 
+				  
+				  clearscreen macro
+				    mov ah,06
+				    mov al,00
+				    mov bh,07
+				    mov ch,00
+				    mov cl,00
+				    mov dh,24
+				    mov dl,79
+				    int 10h   
+				    endm
+				 setcursor macro row,col
+				    mov ah,02
+				    mov al,00
+				    mov bh,00
+				    mov dh,row
+				    mov dl,col
+				    int 10h  
+				    endm 
+				
+				 mainscreen macro
+				 setcursor 7,25   
+				 mov ah,09
+				 mov dx,offset msg4
+				 int 21h      
+				 
+				 setcursor 8,25
+				 mov ah,09
+				 mov dx,offset msg5
+				 int 21h      
+				 
+				 setcursor 9,25    
+				 mov ah,09
+				 mov dx,offset msg6
+				 int 21h 
+				 
+				 endm
+				
+				
+				 drawline macro ocount,incount,col,row,color   
+				;this macro draw lines(vetical or horizontal)
+				    local myloop1,myloop2
+				      
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-12
+
+
+				    mov bh,ocount
+				    mov bl,incount
+				    mov dx,row
+				    mov cx,col
+				    
+				      myloop1:
+				       myloop2:
+				         mov ah,0ch 
+				         mov al,color  ;color
+				         int 10h
+				         inc dx
+				         dec bl
+				         cmp bl,0
+				         jnz myloop2
+				     inc cx
+				     mov dx,row
+				     mov bl,incount
+				     dec bh
+				     jnz myloop1       
+				 endm 
+				 
+				
+				 
+				 drawcir macro cenx,ceny,raduis,colour  ;this m
+				acro draw circle
+				     local myloop10,myloop9,draw,over
+				     
+				       
+				     mov dx,raduis
+				     mov rad1,dx
+				     SHL rad1,1  ;double rad
+				     mov ax,rad1
+				     mov temp4,ax
+				     mov rad2,dx
+				     SHL rad2,1  ;double rad
+				     mov temp3,dx
+				         
+				    
+				     
+				     mov ax,temp3
+				     mul ax
+				     
+				     mov temp3,ax
+				             
+				     mov dx,cenx 
+				     sub dx,raduis
+				     
+				     mov cx,ceny
+				     sub cx,raduis
+				      
+				     mov temp2,cx
+				                 
+				     myloop10:
+				       myloop9:    
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-13
+
+
+				         ;check
+				         mov temp1,dx
+				         
+				         mov ax,dx
+				         sub ax,cenx
+				         mul ax
+				         mov bx,ax
+				         
+				         mov ax,cx
+				         sub ax,ceny
+				         mul ax
+				               
+				         mov dx,temp1
+				               
+				         add ax,bx  
+				             
+				         cmp ax,temp3    
+				         ;cmp ax,sqr
+				         jz draw      
+				         jnc over        
+				         
+				    draw:mov ah,0ch 
+				         mov al,colour
+				         int 10h
+				    over:inc cx
+				         dec rad1
+				         cmp rad1,0
+				         jnz myloop9
+				     inc dx
+				     mov cx,temp2
+				     mov ax,temp4
+				     mov rad1,ax
+				     dec rad2
+				     jnz myloop10
+				          
+				    endm
+				   .model small
+				   .stack 64
+				   .data
+				;interface
+ 0000  70 6C 65 61 73 65	msg1 db 'please enter your name','$'
+       20 65 6E 74 65 72	
+       20 79 6F 75 72 20	
+       6E 61 6D 65 24		
+ 0017  10 00			buffer1 db 16,?,16 dup(?)
+       0010[			
+	   ??			
+			 ]	
+				
+				 
+ 0029  41 42 43 44 45 46	CharArr1 db  'A','B','C','D','E','F','G','H','I
+				','J','K','L','M','N','O','P','Q','R','S','T','
+				U','V','W','X','Y','Z'
+       47 48 49 4A 4B 4C	
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-14
+
+
+       4D 4E 4F 50 51 52	
+       53 54 55 56 57 58	
+       59 5A			
+ 0043  61 62 63 64 65 66	CharArr2 db 'a','b','c','d','e','f','g','h','i'
+				,'j','k','l','m','n','o','p','q','r','s','t','u
+				','v','w','x','y','z' 
+       67 68 69 6A 6B 6C	
+       6D 6E 6F 70 71 72	
+       73 74 75 76 77 78	
+       79 7A			
+ 005D  70 6C 65 61 73 65	msg2 db 'please enter key to continue','$'
+       20 65 6E 74 65 72	
+       20 6B 65 79 20 74	
+       6F 20 63 6F 6E 74	
+       69 6E 75 65 24		
+				;to do : put the three msgs in one msg 
+ 007A  74 6F 20 73 74 61	 msg4 db 'to start chatting press f1','$'
+       72 74 20 63 68 61	
+       74 74 69 6E 67 20	
+       70 72 65 73 73 20	
+       66 31 24			
+ 0095  74 6F 20 73 74 61	 msg5 db 'to start game press f2','$'
+       72 74 20 67 61 6D	
+       65 20 70 72 65 73	
+       73 20 66 32 24		
+ 00AC  74 6F 20 73 74 61	 msg6 db 'to start end the program press ESC','
+				$'
+       72 74 20 65 6E 64	
+       20 74 68 65 20 70	
+       72 6F 67 72 61 6D	
+       20 70 72 65 73 73	
+       20 45 53 43 24		
+				;Game
+ 00CF  00			 CurrentTime db 0
+ 00D0  00			 NextTime db 0
+ 00D1  00			 speed db ? ;ball speed 
+ 00D2  0000			 VerticalFlag dw 0 ;45 degree: up=0 down=1    3
+				0 degree: up=2 down=3
+ 00D4  0001			 HorizFlag dw  1 ;45 degree: right=1 left=0    
+				30 degree: left=2 right=3
+ 00D6  00AA			 centx dw 170
+ 00D8  0078			 centy dw 120
+ 00DA  000F			 rad   dw 15 
+ 00DC  0037			 row1  dw 55 
+ 00DE  0032			 col1  dw 50 
+ 00E0  0037			 row2  dw 55  
+ 00E2  0104			 col2  dw 260
+ 00E4  1E			 BarLen db 30
+ 00E5  04			 BarWid db 4
+ 00E6  0000			 value  dw ?
+ = 000A				 counter EQU 10     
+				 ;these are variables for drawcir macro 
+ 00E8  0000			 temp1 dw ?    ;hold dx
+ 00EA  0000			 temp2 dw ?    ;hold cx
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-15
+
+
+ 00EC  0000			 temp3 dw ?    ;hold rad
+ 00EE  0000			 rad1  dw ?    ;inner loop
+ 00F0  0000			 temp4 dw ?    ;hold inner
+ 00F2  0000			 rad2  dw ?    ;outer loop
+				 
+				   .code
+				 
+				 
+ 0000				 main proc far
+ 0000  B8 ---- R		     mov ax,@data
+ 0003  8E D8			     mov ds,ax
+				;inter face------------------------------------
+				--     
+				UI
+ 0005                        1	stay: 
+ 0005  B4 06                 2	    mov ah,06 
+ 0007  B0 00                 2	    mov al,00 
+ 0009  B7 07                 2	    mov bh,07 
+ 000B  B5 00                 2	    mov ch,00 
+ 000D  B1 00                 2	    mov cl,00 
+ 000F  B6 18                 2	    mov dh,24 
+ 0011  B2 4F                 2	    mov dl,79 
+ 0013  CD 10                 2	    int 10h 
+ 0015  B4 02                 2	    mov ah,02 
+ 0017  B0 00                 2	    mov al,00 
+ 0019  B7 00                 2	    mov bh,00 
+ 001B  B6 0D                 2	    mov dh,13 
+ 001D  B2 16                 2	    mov dl,22 
+ 001F  CD 10                 2	    int 10h 
+ 0021  B4 09                 1	mov ah,09 
+ 0023  BA 005D R             1	mov dx,offset msg2 
+ 0026  CD 21                 1	int 21h 
+ 0028  B4 02                 2	    mov ah,02 
+ 002A  B0 00                 2	    mov al,00 
+ 002C  B7 00                 2	    mov bh,00 
+ 002E  B6 07                 2	    mov dh,7 
+ 0030  B2 19                 2	    mov dl,25 
+ 0032  CD 10                 2	    int 10h 
+ 0034  B4 09                 1	mov ah,09 
+ 0036  BA 0000 R             1	mov dx,offset msg1 
+ 0039  CD 21                 1	int 21h 
+ 003B  B4 02                 2	    mov ah,02 
+ 003D  B0 00                 2	    mov al,00 
+ 003F  B7 00                 2	    mov bh,00 
+ 0041  B6 08                 2	    mov dh,8 
+ 0043  B2 20                 2	    mov dl,32 
+ 0045  CD 10                 2	    int 10h 
+ 0047  B4 0A                 1	mov ah,0ah 
+ 0049  BA 0017 R             1	mov dx,offset buffer1 
+ 004C  CD 21                 1	int 21h 
+ 004E  BB 0017 R             1	mov bx,offset buffer1 
+ 0051  8A 47 02              1	mov al,[bx+2] 
+ 0054  BE 0029 R             1	mov si,offset CharArr1 
+ 0057  BF 0043 R             1	mov di,offset CharArr2 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-16
+
+
+ 005A  B9 001A               1	mov cx,26 
+ 005D  3A 04                 1	myloop1:cmp al,[si] 
+ 005F  74 11                 1	       jz nextA 
+ 0061  46                    1	       inc si 
+ 0062  49                    1	       dec cx 
+ 0063  75 F8                 1	       jnz myloop1 
+ 0065  B9 001A               1	mov cx,26 
+ 0068  3A 05                 1	myloop2:cmp al,[di] 
+ 006A  74 06                 1	       jz nextA 
+ 006C  47                    1	       inc di 
+ 006D  49                    1	       dec cx 
+ 006E  75 F8                 1	       jnz myloop2 
+ 0070  EB 93                 1	       jmp stay 
+ 0072                        1	nextA: 
+ 0072  B4 06                 2	    mov ah,06 
+ 0074  B0 00                 2	    mov al,00 
+ 0076  B7 07                 2	    mov bh,07 
+ 0078  B5 00                 2	    mov ch,00 
+ 007A  B1 00                 2	    mov cl,00 
+ 007C  B6 18                 2	    mov dh,24 
+ 007E  B2 4F                 2	    mov dl,79 
+ 0080  CD 10                 2	    int 10h 
+ 0082  B4 02                 3	    mov ah,02 
+ 0084  B0 00                 3	    mov al,00 
+ 0086  B7 00                 3	    mov bh,00 
+ 0088  B6 07                 3	    mov dh,7 
+ 008A  B2 19                 3	    mov dl,25 
+ 008C  CD 10                 3	    int 10h 
+ 008E  B4 09                 2	 mov ah,09 
+ 0090  BA 007A R             2	 mov dx,offset msg4 
+ 0093  CD 21                 2	 int 21h 
+ 0095  B4 02                 3	    mov ah,02 
+ 0097  B0 00                 3	    mov al,00 
+ 0099  B7 00                 3	    mov bh,00 
+ 009B  B6 08                 3	    mov dh,8 
+ 009D  B2 19                 3	    mov dl,25 
+ 009F  CD 10                 3	    int 10h 
+ 00A1  B4 09                 2	 mov ah,09 
+ 00A3  BA 0095 R             2	 mov dx,offset msg5 
+ 00A6  CD 21                 2	 int 21h 
+ 00A8  B4 02                 3	    mov ah,02 
+ 00AA  B0 00                 3	    mov al,00 
+ 00AC  B7 00                 3	    mov bh,00 
+ 00AE  B6 09                 3	    mov dh,9 
+ 00B0  B2 19                 3	    mov dl,25 
+ 00B2  CD 10                 3	    int 10h 
+ 00B4  B4 09                 2	 mov ah,09 
+ 00B6  BA 00AC R             2	 mov dx,offset msg6 
+ 00B9  CD 21                 2	 int 21h 
+				mainscreen
+ 00BB  B4 02                 2	    mov ah,02 
+ 00BD  B0 00                 2	    mov al,00 
+ 00BF  B7 00                 2	    mov bh,00 
+ 00C1  B6 07                 2	    mov dh,7 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-17
+
+
+ 00C3  B2 19                 2	    mov dl,25 
+ 00C5  CD 10                 2	    int 10h 
+ 00C7  B4 09                 1	 mov ah,09 
+ 00C9  BA 007A R             1	 mov dx,offset msg4 
+ 00CC  CD 21                 1	 int 21h 
+ 00CE  B4 02                 2	    mov ah,02 
+ 00D0  B0 00                 2	    mov al,00 
+ 00D2  B7 00                 2	    mov bh,00 
+ 00D4  B6 08                 2	    mov dh,8 
+ 00D6  B2 19                 2	    mov dl,25 
+ 00D8  CD 10                 2	    int 10h 
+ 00DA  B4 09                 1	 mov ah,09 
+ 00DC  BA 0095 R             1	 mov dx,offset msg5 
+ 00DF  CD 21                 1	 int 21h 
+ 00E1  B4 02                 2	    mov ah,02 
+ 00E3  B0 00                 2	    mov al,00 
+ 00E5  B7 00                 2	    mov bh,00 
+ 00E7  B6 09                 2	    mov dh,9 
+ 00E9  B2 19                 2	    mov dl,25 
+ 00EB  CD 10                 2	    int 10h 
+ 00ED  B4 09                 1	 mov ah,09 
+ 00EF  BA 00AC R             1	 mov dx,offset msg6 
+ 00F2  CD 21                 1	 int 21h 
+ 00F4  B4 01			myloop4: mov ah,1  ;to continue until press rig
+				ht key
+ 00F6  CD 16			             int 16h   
+ 00F8  74 FA			             jz myloop4     
+ 00FA  B4 00			             mov ah,0
+ 00FC  CD 16			             int 16H
+ 00FE  3C 65			             cmp al,'e' ;F2 2Eh
+ 0100  74 0B			             jz clear
+ 0102  3C 1B			             cmp al,1BH  ;ESC
+ 0104  74 02			             jz escape
+ 0106  EB EC			            jmp myloop4  
+ 0108				escape:
+ 0108  B8 4C00			mov ax,4c00h
+ 010B  CD 21			int 21h
+				     
+				;game------------------------------------------
+ 010D				   clear : clearscreen
+ 010D  B4 06                 1	    mov ah,06 
+ 010F  B0 00                 1	    mov al,00 
+ 0111  B7 07                 1	    mov bh,07 
+ 0113  B5 00                 1	    mov ch,00 
+ 0115  B1 00                 1	    mov cl,00 
+ 0117  B6 18                 1	    mov dh,24 
+ 0119  B2 4F                 1	    mov dl,79 
+ 011B  CD 10                 1	    int 10h 
+ 011D  B4 00			     mov ah,0     ;change to graphic mode
+ 011F  B0 13			     mov al,13h
+ 0121  CD 10			     int 10h 
+				
+				      drawline BarWid,BarLen,col1,row1,0Ah     
+				 ;ocount,incount,col,row,color  ->this draw lef
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-18
+
+
+				t stick
+ 0123  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0127  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 012B  8B 16 00DC R          1	    mov dx,row1 
+ 012F  8B 0E 00DE R          1	    mov cx,col1 
+ 0133                        1	      ??0000: 
+ 0133                        1	       ??0001: 
+ 0133  B4 0C                 1	         mov ah,0ch 
+ 0135  B0 0A                 1	         mov al,0Ah  ;color 
+ 0137  CD 10                 1	         int 10h 
+ 0139  42                    1	         inc dx 
+ 013A  FE CB                 1	         dec bl 
+ 013C  80 FB 00              1	         cmp bl,0 
+ 013F  75 F2                 1	         jnz ??0001 
+ 0141  41                    1	     inc cx 
+ 0142  8B 16 00DC R          1	     mov dx,row1 
+ 0146  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 014A  FE CF                 1	     dec bh 
+ 014C  75 E5                 1	     jnz ??0000 
+				     drawline  BarWid,BarLen,col2,row2,0Ah
+ 014E  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0152  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0156  8B 16 00E0 R          1	    mov dx,row2 
+ 015A  8B 0E 00E2 R          1	    mov cx,col2 
+ 015E                        1	      ??0002: 
+ 015E                        1	       ??0003: 
+ 015E  B4 0C                 1	         mov ah,0ch 
+ 0160  B0 0A                 1	         mov al,0Ah  ;color 
+ 0162  CD 10                 1	         int 10h 
+ 0164  42                    1	         inc dx 
+ 0165  FE CB                 1	         dec bl 
+ 0167  80 FB 00              1	         cmp bl,0 
+ 016A  75 F2                 1	         jnz ??0003 
+ 016C  41                    1	     inc cx 
+ 016D  8B 16 00E0 R          1	     mov dx,row2 
+ 0171  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0175  FE CF                 1	     dec bh 
+ 0177  75 E5                 1	     jnz ??0002 
+				     drawline 7,200,0,0,80         ;           
+				                   ->this draw left frame
+ 0179  B7 07                 1	    mov bh,7 
+ 017B  B3 C8                 1	    mov bl,200 
+ 017D  BA 0000               1	    mov dx,0 
+ 0180  B9 0000               1	    mov cx,0 
+ 0183                        1	      ??0004: 
+ 0183                        1	       ??0005: 
+ 0183  B4 0C                 1	         mov ah,0ch 
+ 0185  B0 50                 1	         mov al,80  ;color 
+ 0187  CD 10                 1	         int 10h 
+ 0189  42                    1	         inc dx 
+ 018A  FE CB                 1	         dec bl 
+ 018C  80 FB 00              1	         cmp bl,0 
+ 018F  75 F2                 1	         jnz ??0005 
+ 0191  41                    1	     inc cx 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-19
+
+
+ 0192  BA 0000               1	     mov dx,0 
+ 0195  B3 C8                 1	     mov bl,200 
+ 0197  FE CF                 1	     dec bh 
+ 0199  75 E8                 1	     jnz ??0004 
+				     drawline 7,200,313,0,80       ;           
+				                   ->this draw right frame 
+ 019B  B7 07                 1	    mov bh,7 
+ 019D  B3 C8                 1	    mov bl,200 
+ 019F  BA 0000               1	    mov dx,0 
+ 01A2  B9 0139               1	    mov cx,313 
+ 01A5                        1	      ??0006: 
+ 01A5                        1	       ??0007: 
+ 01A5  B4 0C                 1	         mov ah,0ch 
+ 01A7  B0 50                 1	         mov al,80  ;color 
+ 01A9  CD 10                 1	         int 10h 
+ 01AB  42                    1	         inc dx 
+ 01AC  FE CB                 1	         dec bl 
+ 01AE  80 FB 00              1	         cmp bl,0 
+ 01B1  75 F2                 1	         jnz ??0007 
+ 01B3  41                    1	     inc cx 
+ 01B4  BA 0000               1	     mov dx,0 
+ 01B7  B3 C8                 1	     mov bl,200 
+ 01B9  FE CF                 1	     dec bh 
+ 01BB  75 E8                 1	     jnz ??0006 
+				     drawline 255,3,30,140,80
+ 01BD  B7 FF                 1	    mov bh,255 
+ 01BF  B3 03                 1	    mov bl,3 
+ 01C1  BA 008C               1	    mov dx,140 
+ 01C4  B9 001E               1	    mov cx,30 
+ 01C7                        1	      ??0008: 
+ 01C7                        1	       ??0009: 
+ 01C7  B4 0C                 1	         mov ah,0ch 
+ 01C9  B0 50                 1	         mov al,80  ;color 
+ 01CB  CD 10                 1	         int 10h 
+ 01CD  42                    1	         inc dx 
+ 01CE  FE CB                 1	         dec bl 
+ 01D0  80 FB 00              1	         cmp bl,0 
+ 01D3  75 F2                 1	         jnz ??0009 
+ 01D5  41                    1	     inc cx 
+ 01D6  BA 008C               1	     mov dx,140 
+ 01D9  B3 03                 1	     mov bl,3 
+ 01DB  FE CF                 1	     dec bh 
+ 01DD  75 E8                 1	     jnz ??0008 
+				
+ 01DF				   MAIN_LOOP:  
+				 SharingAxes   
+ 01DF  BA 03FB               1	     mov dx,3fbh 
+ 01E2  B0 80                 1	     MOV Al,10000000b 
+ 01E4  EE                    1	     out dx,al 
+ 01E5  BA 03F8               1	     mov dx,3f8h 
+ 01E8  B0 18                 1	     mov al,18h 
+ 01EA  EE                    1	     OUT DX,al 
+ 01EB  BA 03F9               1	     MOV DX,3F9H 
+ 01EE  B0 00                 1	     mov al,00h 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-20
+
+
+ 01F0  EE                    1	     OUT DX,al 
+ 01F1  BA 03FB               1	     MOV DX,3fbH 
+ 01F4  B0 1B                 1	     mov al,00011011b 
+ 01F6  EE                    1	     OUT DX,al 
+ 01F7  BB 00DC R             1	mov bx,offset row1 
+ 01FA  8A 44 01              1	mov al,[si+1] 
+ 01FD  BA 03FD               1	mov dx,3fdh 
+ 0200  EC                    1	in al,dx 
+ 0201  A8 01                 1	test al,00000001b 
+ 0203  74 DA                 1	jz MAIN_LOOP 
+ 0205  BA 03F8               1	mov dx,3f8h 
+ 0208  EC                    1	in al,dx 
+ 0209  88 47 01              1	mov [bx+1],al 
+				 BallMovement    
+ 020C  83 3E 00D8 R 04       1	cmp centy,4 
+ 0211  74 03                 1	jz A1 
+ 0213  EB 69 90              1	jmp D1 
+ 0216                        1	A1: 
+ 0216  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 021B  75 13                 1	jnz B1 
+ 021D  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 0222  75 0C                 1	jnz B1 
+ 0224  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 022A  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 0230                        1	B1: 
+ 0230  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0235  75 13                 1	jnz B2 
+ 0237  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 023C  75 0C                 1	jnz B2 
+ 023E  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 0244  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 024A                        1	B2: 
+ 024A  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 024F  75 13                 1	jnz B3 
+ 0251  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 0256  75 0C                 1	jnz B3 
+ 0258  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 025E  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 0264                        1	B3: 
+ 0264  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0269  75 13                 1	jnz B4 
+ 026B  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 0270  75 0C                 1	jnz B4 
+ 0272  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 0278  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 027E                        1	B4: 
+ 027E                        1	D1: 
+ 027E  81 3E 00D8 R 0088     1	cmp centy,136 
+ 0284  74 03                 1	jz A2 
+ 0286  EB 69 90              1	jmp D2 
+ 0289                        1	A2: 
+ 0289  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 028E  75 13                 1	jnz B5 
+ 0290  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-21
+
+
+ 0295  75 0C                 1	jnz B5 
+ 0297  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 029D  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 02A3                        1	B5: 
+ 02A3  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 02A8  75 13                 1	jnz B6 
+ 02AA  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 02AF  75 0C                 1	jnz B6 
+ 02B1  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 02B7  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 02BD                        1	B6: 
+ 02BD  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 02C2  75 13                 1	jnz B7 
+ 02C4  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 02C9  75 0C                 1	jnz B7 
+ 02CB  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 02D1  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 02D7                        1	B7: 
+ 02D7  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 02DC  75 13                 1	jnz B8 
+ 02DE  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 02E3  75 0C                 1	jnz B8 
+ 02E5  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 02EB  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 02F1                        1	B8: 
+ 02F1                        1	D2: 
+ 02F1  83 3E 00D6 R 3A       1	cmp centx , 58 
+ 02F6  74 03                 1	jz A3 
+ 02F8  E9 04DB R             1	jmp D3 
+ 02FB                        1	A3: 
+ 02FB  A1 00DC R             1	mov ax,row1 
+ 02FE  8B 1E 00DC R          1	mov bx,row1 
+ 0302  05 000A               1	add ax,10 
+ 0305  83 C3 14              1	add bx,20 
+ 0308  39 06 00D8 R          1	cmp centy,ax 
+ 030C  77 03                 1	ja E1 
+ 030E  E9 039C R             1	jmp D4 
+ 0311                        1	E1: 
+ 0311  39 1E 00D8 R          1	cmp centy,bx 
+ 0315  72 03                 1	jb C1 
+ 0317  E9 039C R             1	jmp D4 
+ 031A                        1	C1: 
+ 031A  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 031F  75 13                 1	jnz B9 
+ 0321  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 0326  75 0C                 1	jnz B9 
+ 0328  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 032E  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 0334                        1	B9: 
+ 0334  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0339  75 13                 1	jnz B10 
+ 033B  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 0340  75 0C                 1	jnz B10 
+ 0342  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-22
+
+
+ 0348  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 034E                        1	B10: 
+ 034E  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 0353  75 13                 1	jnz B11 
+ 0355  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 035A  75 0C                 1	jnz B11 
+ 035C  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 0362  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 0368                        1	B11: 
+ 0368  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 036D  75 13                 1	jnz B12 
+ 036F  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 0374  75 0C                 1	jnz B12 
+ 0376  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 037C  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 0382                        1	B12: 
+ 0382  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 0387  75 13                 1	jnz B13 
+ 0389  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 038E  75 0C                 1	jnz B13 
+ 0390  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 0396  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 039C                        1	B13: 
+ 039C                        1	D4: 
+ 039C  A1 00DC R             1	mov ax,row1 
+ 039F  8B 1E 00DC R          1	mov bx,row1 
+ 03A3  83 C3 0A              1	add bx,10 
+ 03A6  39 06 00D8 R          1	cmp centy,ax 
+ 03AA  77 03                 1	ja E2 
+ 03AC  E9 043A R             1	jmp D5 
+ 03AF                        1	E2: 
+ 03AF  39 1E 00D8 R          1	cmp centy,bx 
+ 03B3  72 03                 1	jb C2 
+ 03B5  E9 043A R             1	jmp D5 
+ 03B8                        1	C2: 
+ 03B8  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 03BD  75 13                 1	jnz B14 
+ 03BF  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 03C4  75 0C                 1	jnz B14 
+ 03C6  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 03CC  C7 06 00D4 R 0001     1	mov HorizFlag, 1 
+ 03D2                        1	B14: 
+ 03D2  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 03D7  75 13                 1	jnz B15 
+ 03D9  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 03DE  75 0C                 1	jnz B15 
+ 03E0  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 03E6  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 03EC                        1	B15: 
+ 03EC  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 03F1  75 13                 1	jnz B16 
+ 03F3  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 03F8  75 0C                 1	jnz B16 
+ 03FA  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-23
+
+
+ 0400  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 0406                        1	B16: 
+ 0406  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 040B  75 13                 1	jnz B17 
+ 040D  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 0412  75 0C                 1	jnz B17 
+ 0414  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 041A  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 0420                        1	B17: 
+ 0420  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0425  75 13                 1	jnz B18 
+ 0427  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 042C  75 0C                 1	jnz B18 
+ 042E  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 0434  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 043A                        1	B18: 
+ 043A                        1	D5: 
+ 043A  A1 00DC R             1	mov ax,row1 
+ 043D  8B 1E 00DC R          1	mov bx,row1 
+ 0441  05 0014               1	add ax,20 
+ 0444  83 C3 1E              1	add bx,30 
+ 0447  39 06 00D8 R          1	cmp centy,ax 
+ 044B  77 03                 1	ja E3 
+ 044D  E9 04DB R             1	jmp D6 
+ 0450                        1	E3: 
+ 0450  39 1E 00D8 R          1	cmp centy,bx 
+ 0454  72 03                 1	jb C3 
+ 0456  E9 04DB R             1	jmp D6 
+ 0459                        1	C3: 
+ 0459  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 045E  75 13                 1	jnz B19 
+ 0460  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 0465  75 0C                 1	jnz B19 
+ 0467  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 046D  C7 06 00D4 R 0001     1	mov HorizFlag, 1 
+ 0473                        1	B19: 
+ 0473  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0478  75 13                 1	jnz B20 
+ 047A  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 047F  75 0C                 1	jnz B20 
+ 0481  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 0487  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 048D                        1	B20: 
+ 048D  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 0492  75 13                 1	jnz B21 
+ 0494  83 3E 00D4 R 00       1	cmp HorizFlag,0 
+ 0499  75 0C                 1	jnz B21 
+ 049B  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 04A1  C7 06 00D4 R 0003     1	mov HorizFlag,3 
+ 04A7                        1	B21: 
+ 04A7  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 04AC  75 13                 1	jnz B22 
+ 04AE  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 04B3  75 0C                 1	jnz B22 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-24
+
+
+ 04B5  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 04BB  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 04C1                        1	B22: 
+ 04C1  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 04C6  75 13                 1	jnz B23 
+ 04C8  83 3E 00D4 R 02       1	cmp HorizFlag,2 
+ 04CD  75 0C                 1	jnz B23 
+ 04CF  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 04D5  C7 06 00D4 R 0001     1	mov HorizFlag,1 
+ 04DB                        1	B23: 
+ 04DB                        1	D6: 
+ 04DB                        1	D3: 
+ 04DB  81 3E 00D6 R 0100     1	cmp centx , 256 
+ 04E1  74 03                 1	jz A4 
+ 04E3  E9 06C6 R             1	jmp D7 
+ 04E6                        1	A4: 
+ 04E6  A1 00E0 R             1	mov ax,row2 
+ 04E9  8B 1E 00E0 R          1	mov bx,row2 
+ 04ED  05 000A               1	add ax,10 
+ 04F0  83 C3 14              1	add bx,20 
+ 04F3  39 06 00D8 R          1	cmp centy,ax 
+ 04F7  77 03                 1	ja E4 
+ 04F9  E9 0587 R             1	jmp D9 
+ 04FC                        1	E4: 
+ 04FC  39 1E 00D8 R          1	cmp centy,bx 
+ 0500  72 03                 1	jb C4 
+ 0502  E9 0587 R             1	jmp D9 
+ 0505                        1	C4: 
+ 0505  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 050A  75 13                 1	jnz B24 
+ 050C  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 0511  75 0C                 1	jnz B24 
+ 0513  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 0519  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 051F                        1	B24: 
+ 051F  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0524  75 13                 1	jnz B25 
+ 0526  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 052B  75 0C                 1	jnz B25 
+ 052D  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 0533  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 0539                        1	B25: 
+ 0539  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 053E  75 13                 1	jnz B26 
+ 0540  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 0545  75 0C                 1	jnz B26 
+ 0547  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 054D  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 0553                        1	B26: 
+ 0553  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0558  75 13                 1	jnz B27 
+ 055A  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 055F  75 0C                 1	jnz B27 
+ 0561  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-25
+
+
+ 0567  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 056D                        1	B27: 
+ 056D  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 0572  75 13                 1	jnz B28 
+ 0574  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 0579  75 0C                 1	jnz B28 
+ 057B  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 0581  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 0587                        1	B28: 
+ 0587                        1	D9: 
+ 0587  A1 00E0 R             1	mov ax,row2 
+ 058A  8B 1E 00E0 R          1	mov bx,row2 
+ 058E  83 C3 0A              1	add bx,10 
+ 0591  39 06 00D8 R          1	cmp centy,ax 
+ 0595  77 03                 1	ja E5 
+ 0597  E9 0625 R             1	jmp D8 
+ 059A                        1	E5: 
+ 059A  39 1E 00D8 R          1	cmp centy,bx 
+ 059E  72 03                 1	jb C5 
+ 05A0  E9 0625 R             1	jmp D8 
+ 05A3                        1	C5: 
+ 05A3  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 05A8  75 13                 1	jnz B29 
+ 05AA  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 05AF  75 0C                 1	jnz B29 
+ 05B1  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 05B7  C7 06 00D4 R 0000     1	mov HorizFlag, 0 
+ 05BD                        1	B29: 
+ 05BD  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 05C2  75 13                 1	jnz B30 
+ 05C4  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 05C9  75 0C                 1	jnz B30 
+ 05CB  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 05D1  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 05D7                        1	B30: 
+ 05D7  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 05DC  75 13                 1	jnz B31 
+ 05DE  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 05E3  75 0C                 1	jnz B31 
+ 05E5  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 05EB  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 05F1                        1	B31: 
+ 05F1  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 05F6  75 13                 1	jnz B32 
+ 05F8  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 05FD  75 0C                 1	jnz B32 
+ 05FF  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 0605  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 060B                        1	B32: 
+ 060B  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0610  75 13                 1	jnz B33 
+ 0612  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 0617  75 0C                 1	jnz B33 
+ 0619  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-26
+
+
+ 061F  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 0625                        1	B33: 
+ 0625                        1	D8: 
+ 0625  A1 00E0 R             1	mov ax,row2 
+ 0628  8B 1E 00E0 R          1	mov bx,row2 
+ 062C  05 0014               1	add ax,20 
+ 062F  83 C3 1E              1	add bx,30 
+ 0632  39 06 00D8 R          1	cmp centy,ax 
+ 0636  77 03                 1	ja E6 
+ 0638  E9 06C6 R             1	jmp D10 
+ 063B                        1	E6: 
+ 063B  39 1E 00D8 R          1	cmp centy,bx 
+ 063F  72 03                 1	jb C6 
+ 0641  E9 06C6 R             1	jmp D10 
+ 0644                        1	C6: 
+ 0644  83 3E 00D2 R 04       1	cmp  VerticalFlag,4 
+ 0649  75 13                 1	jnz B34 
+ 064B  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 0650  75 0C                 1	jnz B34 
+ 0652  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 0658  C7 06 00D4 R 0000     1	mov HorizFlag, 0 
+ 065E                        1	B34: 
+ 065E  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0663  75 13                 1	jnz B35 
+ 0665  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 066A  75 0C                 1	jnz B35 
+ 066C  C7 06 00D2 R 0000     1	mov VerticalFlag ,0 
+ 0672  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 0678                        1	B35: 
+ 0678  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 067D  75 13                 1	jnz B36 
+ 067F  83 3E 00D4 R 01       1	cmp HorizFlag,1 
+ 0684  75 0C                 1	jnz B36 
+ 0686  C7 06 00D2 R 0001     1	mov VerticalFlag ,1 
+ 068C  C7 06 00D4 R 0002     1	mov HorizFlag,2 
+ 0692                        1	B36: 
+ 0692  83 3E 00D2 R 00       1	cmp  VerticalFlag,0 
+ 0697  75 13                 1	jnz B37 
+ 0699  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 069E  75 0C                 1	jnz B37 
+ 06A0  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 06A6  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 06AC                        1	B37: 
+ 06AC  83 3E 00D2 R 01       1	cmp  VerticalFlag,1 
+ 06B1  75 13                 1	jnz B38 
+ 06B3  83 3E 00D4 R 03       1	cmp HorizFlag,3 
+ 06B8  75 0C                 1	jnz B38 
+ 06BA  C7 06 00D2 R 0004     1	mov VerticalFlag ,4 
+ 06C0  C7 06 00D4 R 0000     1	mov HorizFlag,0 
+ 06C6                        1	B38: 
+ 06C6                        1	D10: 
+ 06C6                        1	D7: 
+				;kero------>start
+				 drawcir centy,centx,4,00  ;cenx,ceny,raduis,co
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-27
+
+
+				lour
+ 06C6  BA 0004               1	     mov dx,4 
+ 06C9  89 16 00EE R          1	     mov rad1,dx 
+ 06CD  D1 26 00EE R          1	     SHL rad1,1  ;double rad 
+ 06D1  A1 00EE R             1	     mov ax,rad1 
+ 06D4  A3 00F0 R             1	     mov temp4,ax 
+ 06D7  89 16 00F2 R          1	     mov rad2,dx 
+ 06DB  D1 26 00F2 R          1	     SHL rad2,1  ;double rad 
+ 06DF  89 16 00EC R          1	     mov temp3,dx 
+ 06E3  A1 00EC R             1	     mov ax,temp3 
+ 06E6  F7 E0                 1	     mul ax 
+ 06E8  A3 00EC R             1	     mov temp3,ax 
+ 06EB  8B 16 00D8 R          1	     mov dx,centy 
+ 06EF  83 EA 04              1	     sub dx,4 
+ 06F2  8B 0E 00D6 R          1	     mov cx,centx 
+ 06F6  83 E9 04              1	     sub cx,4 
+ 06F9  89 0E 00EA R          1	     mov temp2,cx 
+ 06FD                        1	     ??000A: 
+ 06FD                        1	       ??000B: 
+ 06FD  89 16 00E8 R          1	         mov temp1,dx 
+ 0701  8B C2                 1	         mov ax,dx 
+ 0703  2B 06 00D8 R          1	         sub ax,centy 
+ 0707  F7 E0                 1	         mul ax 
+ 0709  8B D8                 1	         mov bx,ax 
+ 070B  8B C1                 1	         mov ax,cx 
+ 070D  2B 06 00D6 R          1	         sub ax,centx 
+ 0711  F7 E0                 1	         mul ax 
+ 0713  8B 16 00E8 R          1	         mov dx,temp1 
+ 0717  03 C3                 1	         add ax,bx 
+ 0719  3B 06 00EC R          1	         cmp ax,temp3 
+ 071D  74 02                 1	         jz ??000C 
+ 071F  73 06                 1	         jnc ??000D 
+ 0721  B4 0C                 1	    ??000C:mov ah,0ch 
+ 0723  B0 00                 1	         mov al,00 
+ 0725  CD 10                 1	         int 10h 
+ 0727  41                    1	    ??000D:inc cx 
+ 0728  FF 0E 00EE R          1	         dec rad1 
+ 072C  83 3E 00EE R 00       1	         cmp rad1,0 
+ 0731  75 CA                 1	         jnz ??000B 
+ 0733  42                    1	     inc dx 
+ 0734  8B 0E 00EA R          1	     mov cx,temp2 
+ 0738  A1 00F0 R             1	     mov ax,temp4 
+ 073B  A3 00EE R             1	     mov rad1,ax 
+ 073E  FF 0E 00F2 R          1	     dec rad2 
+ 0742  75 B9                 1	     jnz ??000A 
+ 0744  B4 2C			mov ah,2ch
+ 0746  CD 21			int 21h
+ 0748  38 16 00CF R		cmp CurrentTime,dl
+ 074C  74 03			je Again1
+				
+				; Change in ball direction conditions---->start
+				
+				;cmp centx,255
+				;jne next3
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-28
+
+
+				;mov HorizFlag,0
+				;next3:
+				
+				;cmp centy,5
+				;jne next4
+				;mov VerticalFlag ,1
+				;mov HorizFlag ,3
+				;next4:
+				;cmp centy,135
+				;jne next7
+				;mov VerticalFlag,0
+ 074E  EB 04 90			jmp next7
+				
+ 0751				again1:
+ 0751  EB 75 90			jmp Again
+				;this handles movment in 30 degrees
+				
+ 0754				next7:
+ 0754  83 3E 00D2 R 02		cmp VerticalFlag,2
+ 0759  74 12			je Up2
+ 075B  83 3E 00D2 R 03		cmp VerticalFlag,3
+ 0760  74 03			je Down2 
+ 0762  EB 0E 90			jmp next6
+				
+ 0765  83 06 00D8 R 02		Down2: add centy,2
+ 076A  EB 06 90			jmp next6
+ 076D  83 2E 00D8 R 02		Up2 : sub centy , 2
+ 0772				next6 :
+ 0772  83 3E 00D4 R 02		cmp HorizFlag,2
+ 0777  74 12			je Left2
+ 0779  83 3E 00D4 R 03		cmp HorizFlag,3
+ 077E  74 03			je Right2
+				
+ 0780  EB 0E 90			jmp next5
+ 0783  83 06 00D6 R 02		Right2:add centx,2
+ 0788  EB 06 90			jmp next5
+ 078B  83 2E 00D6 R 02		Left2:sub centx,2
+				
+ 0790				next5:
+				
+				;this handles movment 45 degree
+				
+ 0790				next2 :
+ 0790  83 3E 00D2 R 00		cmp VerticalFlag,0
+ 0795  74 11			je Up
+ 0797  83 3E 00D2 R 01		cmp VerticalFlag,1
+ 079C  74 03			je Down 
+ 079E  EB 0C 90			jmp next
+ 07A1  FF 06 00D8 R		Down: inc centy
+ 07A5  EB 05 90			jmp next
+ 07A8  FF 0E 00D8 R		Up : dec centy
+ 07AC				next :
+ 07AC  83 3E 00D4 R 00		cmp HorizFlag,0
+ 07B1  74 11			je Left
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-29
+
+
+ 07B3  83 3E 00D4 R 01		cmp HorizFlag,1
+ 07B8  74 03			je Right
+ 07BA  EB 0C 90			jmp Again
+ 07BD  FF 06 00D6 R		Right:inc centx
+ 07C1  EB 05 90			jmp Again
+ 07C4  FF 0E 00D6 R		Left:dec centx
+				
+				;change in ball direction conditions--->end
+ 07C8				Again: 
+ 07C8  88 16 00CF R		mov CurrentTime , dl
+				
+				
+				drawcir centy,centx,4,15  ;cenx,ceny,raduis,col
+				our
+ 07CC  BA 0004               1	     mov dx,4 
+ 07CF  89 16 00EE R          1	     mov rad1,dx 
+ 07D3  D1 26 00EE R          1	     SHL rad1,1  ;double rad 
+ 07D7  A1 00EE R             1	     mov ax,rad1 
+ 07DA  A3 00F0 R             1	     mov temp4,ax 
+ 07DD  89 16 00F2 R          1	     mov rad2,dx 
+ 07E1  D1 26 00F2 R          1	     SHL rad2,1  ;double rad 
+ 07E5  89 16 00EC R          1	     mov temp3,dx 
+ 07E9  A1 00EC R             1	     mov ax,temp3 
+ 07EC  F7 E0                 1	     mul ax 
+ 07EE  A3 00EC R             1	     mov temp3,ax 
+ 07F1  8B 16 00D8 R          1	     mov dx,centy 
+ 07F5  83 EA 04              1	     sub dx,4 
+ 07F8  8B 0E 00D6 R          1	     mov cx,centx 
+ 07FC  83 E9 04              1	     sub cx,4 
+ 07FF  89 0E 00EA R          1	     mov temp2,cx 
+ 0803                        1	     ??000E: 
+ 0803                        1	       ??000F: 
+ 0803  89 16 00E8 R          1	         mov temp1,dx 
+ 0807  8B C2                 1	         mov ax,dx 
+ 0809  2B 06 00D8 R          1	         sub ax,centy 
+ 080D  F7 E0                 1	         mul ax 
+ 080F  8B D8                 1	         mov bx,ax 
+ 0811  8B C1                 1	         mov ax,cx 
+ 0813  2B 06 00D6 R          1	         sub ax,centx 
+ 0817  F7 E0                 1	         mul ax 
+ 0819  8B 16 00E8 R          1	         mov dx,temp1 
+ 081D  03 C3                 1	         add ax,bx 
+ 081F  3B 06 00EC R          1	         cmp ax,temp3 
+ 0823  74 02                 1	         jz ??0010 
+ 0825  73 06                 1	         jnc ??0011 
+ 0827  B4 0C                 1	    ??0010:mov ah,0ch 
+ 0829  B0 0F                 1	         mov al,15 
+ 082B  CD 10                 1	         int 10h 
+ 082D  41                    1	    ??0011:inc cx 
+ 082E  FF 0E 00EE R          1	         dec rad1 
+ 0832  83 3E 00EE R 00       1	         cmp rad1,0 
+ 0837  75 CA                 1	         jnz ??000F 
+ 0839  42                    1	     inc dx 
+ 083A  8B 0E 00EA R          1	     mov cx,temp2 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-30
+
+
+ 083E  A1 00F0 R             1	     mov ax,temp4 
+ 0841  A3 00EE R             1	     mov rad1,ax 
+ 0844  FF 0E 00F2 R          1	     dec rad2 
+ 0848  75 B9                 1	     jnz ??000E 
+				;kero------>end
+				
+				;Dina --->start
+				 
+				
+ 084A				MY_LOOP:
+				
+ 084A  B4 01			mov ah,1
+ 084C  CD 16			int 16h 
+				
+ 084E  80 FC 48			cmp ah,72
+ 0851  74 10			jz MoveUp 
+ 0853  3C 65			cmp al,65h
+ 0855  74 1C			jz MoveUp22
+ 0857  80 FC 50			cmp ah,80
+ 085A  74 27			jz MoveDown
+ 085C  3C 64			cmp al,64h
+ 085E  74 33			jz MoveDown22    
+ 0860  E9 01DF R		jmp MAIN_LOOP
+				
+				  
+ 0863				MoveUp:
+				
+ 0863  E8 0B7F R		call FlushKeyBuffer 
+ 0866  83 3E 00DC R 00		cmp row1 , 00 
+ 086B  74 DD			je MY_LOOP
+ 086D  E8 08A3 R		call MoveUP1     
+				
+ 0870  E9 01DF R		jmp MAIN_LOOP
+				
+ 0873				MoveUp22: 
+ 0873  E8 0B7F R		call FlushKeyBuffer
+ 0876  83 3E 00E0 R 00		cmp row2 , 00 
+ 087B  74 CD			je MY_LOOP
+ 087D  E8 0AC8 R		call MoveUP2
+				
+ 0880  E9 01DF R		jmp MAIN_LOOP
+ 0883				MoveDown:
+ 0883  E8 0B7F R		call FlushKeyBuffer
+ 0886  83 3E 00DC R 64		cmp row1 , 100 
+ 088B  74 BD			je MY_LOOP
+ 088D  E8 0A11 R		call MoveDOWN1  
+ 0890  E9 01DF R		jmp MAIN_LOOP
+				
+ 0893				MoveDown22:
+ 0893  E8 0B7F R		call FlushKeyBuffer
+ 0896  83 3E 00E0 R 64		cmp row2 , 100 
+ 089B  74 AD			je MY_LOOP
+ 089D  E8 095A R		call MoveDOWN2
+ 08A0  E9 01DF R		jmp MAIN_LOOP
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-31
+
+
+ 08A3				 main endp
+				
+				
+				
+				
+				
+ 08A3				 MoveUP1 proc  
+				     drawline BarWid,BarLen,col1,row1,00h      
+				;ocount,incount,col,row,color  ->this draw left
+				 stick
+ 08A3  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 08A7  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 08AB  8B 16 00DC R          1	    mov dx,row1 
+ 08AF  8B 0E 00DE R          1	    mov cx,col1 
+ 08B3                        1	      ??0012: 
+ 08B3                        1	       ??0013: 
+ 08B3  B4 0C                 1	         mov ah,0ch 
+ 08B5  B0 00                 1	         mov al,00h  ;color 
+ 08B7  CD 10                 1	         int 10h 
+ 08B9  42                    1	         inc dx 
+ 08BA  FE CB                 1	         dec bl 
+ 08BC  80 FB 00              1	         cmp bl,0 
+ 08BF  75 F2                 1	         jnz ??0013 
+ 08C1  41                    1	     inc cx 
+ 08C2  8B 16 00DC R          1	     mov dx,row1 
+ 08C6  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 08CA  FE CF                 1	     dec bh 
+ 08CC  75 E5                 1	     jnz ??0012 
+				     drawline  BarWid,BarLen,col2,row2,00h
+ 08CE  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 08D2  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 08D6  8B 16 00E0 R          1	    mov dx,row2 
+ 08DA  8B 0E 00E2 R          1	    mov cx,col2 
+ 08DE                        1	      ??0014: 
+ 08DE                        1	       ??0015: 
+ 08DE  B4 0C                 1	         mov ah,0ch 
+ 08E0  B0 00                 1	         mov al,00h  ;color 
+ 08E2  CD 10                 1	         int 10h 
+ 08E4  42                    1	         inc dx 
+ 08E5  FE CB                 1	         dec bl 
+ 08E7  80 FB 00              1	         cmp bl,0 
+ 08EA  75 F2                 1	         jnz ??0015 
+ 08EC  41                    1	     inc cx 
+ 08ED  8B 16 00E0 R          1	     mov dx,row2 
+ 08F1  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 08F5  FE CF                 1	     dec bh 
+ 08F7  75 E5                 1	     jnz ??0014 
+ 08F9  BB 00DC R		     mov bx , offset row1
+ 08FC  8B 07			   mov ax , [bx]
+ 08FE  2D 000A			     sub ax , 10 
+ 0901  89 07			     mov [bx] ,ax               
+				     drawline  BarWid,BarLen,col1,row1,0Ah     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-32
+
+
+ 0903  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0907  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 090B  8B 16 00DC R          1	    mov dx,row1 
+ 090F  8B 0E 00DE R          1	    mov cx,col1 
+ 0913                        1	      ??0016: 
+ 0913                        1	       ??0017: 
+ 0913  B4 0C                 1	         mov ah,0ch 
+ 0915  B0 0A                 1	         mov al,0Ah  ;color 
+ 0917  CD 10                 1	         int 10h 
+ 0919  42                    1	         inc dx 
+ 091A  FE CB                 1	         dec bl 
+ 091C  80 FB 00              1	         cmp bl,0 
+ 091F  75 F2                 1	         jnz ??0017 
+ 0921  41                    1	     inc cx 
+ 0922  8B 16 00DC R          1	     mov dx,row1 
+ 0926  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 092A  FE CF                 1	     dec bh 
+ 092C  75 E5                 1	     jnz ??0016 
+				     drawline  BarWid,BarLen,col2,row2,0Ah 
+ 092E  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0932  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0936  8B 16 00E0 R          1	    mov dx,row2 
+ 093A  8B 0E 00E2 R          1	    mov cx,col2 
+ 093E                        1	      ??0018: 
+ 093E                        1	       ??0019: 
+ 093E  B4 0C                 1	         mov ah,0ch 
+ 0940  B0 0A                 1	         mov al,0Ah  ;color 
+ 0942  CD 10                 1	         int 10h 
+ 0944  42                    1	         inc dx 
+ 0945  FE CB                 1	         dec bl 
+ 0947  80 FB 00              1	         cmp bl,0 
+ 094A  75 F2                 1	         jnz ??0019 
+ 094C  41                    1	     inc cx 
+ 094D  8B 16 00E0 R          1	     mov dx,row2 
+ 0951  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0955  FE CF                 1	     dec bh 
+ 0957  75 E5                 1	     jnz ??0018 
+ 0959  C3			     ret
+ 095A				     MoveUP1 endp     
+				
+ 095A				MoveDOWN2 proc 
+				     drawline  BarWid,BarLen,col1,row1,00h     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+ 095A  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 095E  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0962  8B 16 00DC R          1	    mov dx,row1 
+ 0966  8B 0E 00DE R          1	    mov cx,col1 
+ 096A                        1	      ??001A: 
+ 096A                        1	       ??001B: 
+ 096A  B4 0C                 1	         mov ah,0ch 
+ 096C  B0 00                 1	         mov al,00h  ;color 
+ 096E  CD 10                 1	         int 10h 
+ 0970  42                    1	         inc dx 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-33
+
+
+ 0971  FE CB                 1	         dec bl 
+ 0973  80 FB 00              1	         cmp bl,0 
+ 0976  75 F2                 1	         jnz ??001B 
+ 0978  41                    1	     inc cx 
+ 0979  8B 16 00DC R          1	     mov dx,row1 
+ 097D  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0981  FE CF                 1	     dec bh 
+ 0983  75 E5                 1	     jnz ??001A 
+				     drawline  BarWid,BarLen,col2,row2,00h
+ 0985  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0989  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 098D  8B 16 00E0 R          1	    mov dx,row2 
+ 0991  8B 0E 00E2 R          1	    mov cx,col2 
+ 0995                        1	      ??001C: 
+ 0995                        1	       ??001D: 
+ 0995  B4 0C                 1	         mov ah,0ch 
+ 0997  B0 00                 1	         mov al,00h  ;color 
+ 0999  CD 10                 1	         int 10h 
+ 099B  42                    1	         inc dx 
+ 099C  FE CB                 1	         dec bl 
+ 099E  80 FB 00              1	         cmp bl,0 
+ 09A1  75 F2                 1	         jnz ??001D 
+ 09A3  41                    1	     inc cx 
+ 09A4  8B 16 00E0 R          1	     mov dx,row2 
+ 09A8  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 09AC  FE CF                 1	     dec bh 
+ 09AE  75 E5                 1	     jnz ??001C 
+ 09B0  BB 00E0 R		     mov bx , offset row2   
+ 09B3  8B 07			     mov ax , [bx]
+ 09B5  05 000A			     add ax , 10 
+ 09B8  89 07			     mov [bx] ,ax        
+				     drawline  BarWid,BarLen,col1,row1,0Ah     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+ 09BA  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 09BE  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 09C2  8B 16 00DC R          1	    mov dx,row1 
+ 09C6  8B 0E 00DE R          1	    mov cx,col1 
+ 09CA                        1	      ??001E: 
+ 09CA                        1	       ??001F: 
+ 09CA  B4 0C                 1	         mov ah,0ch 
+ 09CC  B0 0A                 1	         mov al,0Ah  ;color 
+ 09CE  CD 10                 1	         int 10h 
+ 09D0  42                    1	         inc dx 
+ 09D1  FE CB                 1	         dec bl 
+ 09D3  80 FB 00              1	         cmp bl,0 
+ 09D6  75 F2                 1	         jnz ??001F 
+ 09D8  41                    1	     inc cx 
+ 09D9  8B 16 00DC R          1	     mov dx,row1 
+ 09DD  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 09E1  FE CF                 1	     dec bh 
+ 09E3  75 E5                 1	     jnz ??001E 
+				     drawline  BarWid,BarLen,col2,row2,0Ah 
+ 09E5  8A 3E 00E5 R          1	    mov bh,BarWid 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-34
+
+
+ 09E9  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 09ED  8B 16 00E0 R          1	    mov dx,row2 
+ 09F1  8B 0E 00E2 R          1	    mov cx,col2 
+ 09F5                        1	      ??0020: 
+ 09F5                        1	       ??0021: 
+ 09F5  B4 0C                 1	         mov ah,0ch 
+ 09F7  B0 0A                 1	         mov al,0Ah  ;color 
+ 09F9  CD 10                 1	         int 10h 
+ 09FB  42                    1	         inc dx 
+ 09FC  FE CB                 1	         dec bl 
+ 09FE  80 FB 00              1	         cmp bl,0 
+ 0A01  75 F2                 1	         jnz ??0021 
+ 0A03  41                    1	     inc cx 
+ 0A04  8B 16 00E0 R          1	     mov dx,row2 
+ 0A08  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0A0C  FE CF                 1	     dec bh 
+ 0A0E  75 E5                 1	     jnz ??0020 
+ 0A10  C3			     ret   
+ 0A11				  MoveDOWN2  endp 
+				         
+ 0A11				 MoveDOWN1 proc        
+				          drawline  BarWid,BarLen,col1,row1,00h
+				      ;ocount,incount,col,row,color  ->this dra
+				w left stick
+ 0A11  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0A15  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0A19  8B 16 00DC R          1	    mov dx,row1 
+ 0A1D  8B 0E 00DE R          1	    mov cx,col1 
+ 0A21                        1	      ??0022: 
+ 0A21                        1	       ??0023: 
+ 0A21  B4 0C                 1	         mov ah,0ch 
+ 0A23  B0 00                 1	         mov al,00h  ;color 
+ 0A25  CD 10                 1	         int 10h 
+ 0A27  42                    1	         inc dx 
+ 0A28  FE CB                 1	         dec bl 
+ 0A2A  80 FB 00              1	         cmp bl,0 
+ 0A2D  75 F2                 1	         jnz ??0023 
+ 0A2F  41                    1	     inc cx 
+ 0A30  8B 16 00DC R          1	     mov dx,row1 
+ 0A34  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0A38  FE CF                 1	     dec bh 
+ 0A3A  75 E5                 1	     jnz ??0022 
+				     drawline  BarWid,BarLen,col2,row2,00h
+ 0A3C  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0A40  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0A44  8B 16 00E0 R          1	    mov dx,row2 
+ 0A48  8B 0E 00E2 R          1	    mov cx,col2 
+ 0A4C                        1	      ??0024: 
+ 0A4C                        1	       ??0025: 
+ 0A4C  B4 0C                 1	         mov ah,0ch 
+ 0A4E  B0 00                 1	         mov al,00h  ;color 
+ 0A50  CD 10                 1	         int 10h 
+ 0A52  42                    1	         inc dx 
+ 0A53  FE CB                 1	         dec bl 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-35
+
+
+ 0A55  80 FB 00              1	         cmp bl,0 
+ 0A58  75 F2                 1	         jnz ??0025 
+ 0A5A  41                    1	     inc cx 
+ 0A5B  8B 16 00E0 R          1	     mov dx,row2 
+ 0A5F  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0A63  FE CF                 1	     dec bh 
+ 0A65  75 E5                 1	     jnz ??0024 
+ 0A67  BB 00DC R		     mov bx , offset row1
+ 0A6A  8B 07			    mov ax , [bx]
+ 0A6C  05 000A			     add ax , 10 
+ 0A6F  89 07			     mov [bx] ,ax                
+				     drawline  BarWid,BarLen,col1,row1,0Ah     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+ 0A71  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0A75  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0A79  8B 16 00DC R          1	    mov dx,row1 
+ 0A7D  8B 0E 00DE R          1	    mov cx,col1 
+ 0A81                        1	      ??0026: 
+ 0A81                        1	       ??0027: 
+ 0A81  B4 0C                 1	         mov ah,0ch 
+ 0A83  B0 0A                 1	         mov al,0Ah  ;color 
+ 0A85  CD 10                 1	         int 10h 
+ 0A87  42                    1	         inc dx 
+ 0A88  FE CB                 1	         dec bl 
+ 0A8A  80 FB 00              1	         cmp bl,0 
+ 0A8D  75 F2                 1	         jnz ??0027 
+ 0A8F  41                    1	     inc cx 
+ 0A90  8B 16 00DC R          1	     mov dx,row1 
+ 0A94  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0A98  FE CF                 1	     dec bh 
+ 0A9A  75 E5                 1	     jnz ??0026 
+				     drawline  BarWid,BarLen,col2,row2,0Ah  
+ 0A9C  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0AA0  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0AA4  8B 16 00E0 R          1	    mov dx,row2 
+ 0AA8  8B 0E 00E2 R          1	    mov cx,col2 
+ 0AAC                        1	      ??0028: 
+ 0AAC                        1	       ??0029: 
+ 0AAC  B4 0C                 1	         mov ah,0ch 
+ 0AAE  B0 0A                 1	         mov al,0Ah  ;color 
+ 0AB0  CD 10                 1	         int 10h 
+ 0AB2  42                    1	         inc dx 
+ 0AB3  FE CB                 1	         dec bl 
+ 0AB5  80 FB 00              1	         cmp bl,0 
+ 0AB8  75 F2                 1	         jnz ??0029 
+ 0ABA  41                    1	     inc cx 
+ 0ABB  8B 16 00E0 R          1	     mov dx,row2 
+ 0ABF  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0AC3  FE CF                 1	     dec bh 
+ 0AC5  75 E5                 1	     jnz ??0028 
+ 0AC7  C3			     ret
+ 0AC8				  MoveDOWN1  endp 
+				
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-36
+
+
+ 0AC8				 MoveUP2 proc 
+				     drawline  BarWid,BarLen,col1,row1,00h     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+ 0AC8  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0ACC  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0AD0  8B 16 00DC R          1	    mov dx,row1 
+ 0AD4  8B 0E 00DE R          1	    mov cx,col1 
+ 0AD8                        1	      ??002A: 
+ 0AD8                        1	       ??002B: 
+ 0AD8  B4 0C                 1	         mov ah,0ch 
+ 0ADA  B0 00                 1	         mov al,00h  ;color 
+ 0ADC  CD 10                 1	         int 10h 
+ 0ADE  42                    1	         inc dx 
+ 0ADF  FE CB                 1	         dec bl 
+ 0AE1  80 FB 00              1	         cmp bl,0 
+ 0AE4  75 F2                 1	         jnz ??002B 
+ 0AE6  41                    1	     inc cx 
+ 0AE7  8B 16 00DC R          1	     mov dx,row1 
+ 0AEB  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0AEF  FE CF                 1	     dec bh 
+ 0AF1  75 E5                 1	     jnz ??002A 
+				     drawline  BarWid,BarLen,col2,row2,00h
+ 0AF3  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0AF7  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0AFB  8B 16 00E0 R          1	    mov dx,row2 
+ 0AFF  8B 0E 00E2 R          1	    mov cx,col2 
+ 0B03                        1	      ??002C: 
+ 0B03                        1	       ??002D: 
+ 0B03  B4 0C                 1	         mov ah,0ch 
+ 0B05  B0 00                 1	         mov al,00h  ;color 
+ 0B07  CD 10                 1	         int 10h 
+ 0B09  42                    1	         inc dx 
+ 0B0A  FE CB                 1	         dec bl 
+ 0B0C  80 FB 00              1	         cmp bl,0 
+ 0B0F  75 F2                 1	         jnz ??002D 
+ 0B11  41                    1	     inc cx 
+ 0B12  8B 16 00E0 R          1	     mov dx,row2 
+ 0B16  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0B1A  FE CF                 1	     dec bh 
+ 0B1C  75 E5                 1	     jnz ??002C 
+ 0B1E  BB 00E0 R		     mov bx , offset row2
+ 0B21  8B 07			     mov ax , [bx]
+ 0B23  2D 000A			     sub ax , 10  
+ 0B26  89 07			    mov [bx] ,ax             
+				     drawline  BarWid,BarLen,col1,row1,0Ah     
+				 ;ocount,incount,col,row,color  ->this draw lef
+				t stick
+ 0B28  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0B2C  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0B30  8B 16 00DC R          1	    mov dx,row1 
+ 0B34  8B 0E 00DE R          1	    mov cx,col1 
+ 0B38                        1	      ??002E: 
+ 0B38                        1	       ??002F: 
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Page     1-37
+
+
+ 0B38  B4 0C                 1	         mov ah,0ch 
+ 0B3A  B0 0A                 1	         mov al,0Ah  ;color 
+ 0B3C  CD 10                 1	         int 10h 
+ 0B3E  42                    1	         inc dx 
+ 0B3F  FE CB                 1	         dec bl 
+ 0B41  80 FB 00              1	         cmp bl,0 
+ 0B44  75 F2                 1	         jnz ??002F 
+ 0B46  41                    1	     inc cx 
+ 0B47  8B 16 00DC R          1	     mov dx,row1 
+ 0B4B  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0B4F  FE CF                 1	     dec bh 
+ 0B51  75 E5                 1	     jnz ??002E 
+				     drawline  BarWid,BarLen,col2,row2,0Ah 
+ 0B53  8A 3E 00E5 R          1	    mov bh,BarWid 
+ 0B57  8A 1E 00E4 R          1	    mov bl,BarLen 
+ 0B5B  8B 16 00E0 R          1	    mov dx,row2 
+ 0B5F  8B 0E 00E2 R          1	    mov cx,col2 
+ 0B63                        1	      ??0030: 
+ 0B63                        1	       ??0031: 
+ 0B63  B4 0C                 1	         mov ah,0ch 
+ 0B65  B0 0A                 1	         mov al,0Ah  ;color 
+ 0B67  CD 10                 1	         int 10h 
+ 0B69  42                    1	         inc dx 
+ 0B6A  FE CB                 1	         dec bl 
+ 0B6C  80 FB 00              1	         cmp bl,0 
+ 0B6F  75 F2                 1	         jnz ??0031 
+ 0B71  41                    1	     inc cx 
+ 0B72  8B 16 00E0 R          1	     mov dx,row2 
+ 0B76  8A 1E 00E4 R          1	     mov bl,BarLen 
+ 0B7A  FE CF                 1	     dec bh 
+ 0B7C  75 E5                 1	     jnz ??0030 
+ 0B7E  C3			     ret    
+ 0B7F				  MoveUP2  endp 
+				
+ 0B7F				FlushKeyBuffer proc
+ 0B7F  B4 0C			mov ah,0ch   ;remove key pressed from buffer
+ 0B81  B0 00			mov al,0
+ 0B83  CD 21			int 21h  
+ 0B85  C3			ret
+ 0B86				FlushKeyBuffer endp     
+				;Dina --->end
+				     
+				
+				          end main
+
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BALLMOVEMENT . . . . . . . . . .  	 409
+CLEARSCREEN  . . . . . . . . . .  	   8
+DRAWCIR  . . . . . . . . . . . .  	  46
+DRAWLINE . . . . . . . . . . . .  	  18
+MAINSCREEN . . . . . . . . . . .  	  12
+SETCURSOR  . . . . . . . . . . .  	   6
+SHARINGAXES  . . . . . . . . . .  	  23
+UI . . . . . . . . . . . . . . .  	  35
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+DGROUP . . . . . . . . . . . . .  	GROUP
+  _DATA  . . . . . . . . . . . .  	00F4	WORD	PUBLIC	'DATA'
+  STACK  . . . . . . . . . . . .  	0040	PARA	STACK	'STACK'
+_TEXT  . . . . . . . . . . . . .  	0B86	WORD	PUBLIC	'CODE'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+A1 . . . . . . . . . . . . . . .  	L NEAR	0216	_TEXT
+A2 . . . . . . . . . . . . . . .  	L NEAR	0289	_TEXT
+A3 . . . . . . . . . . . . . . .  	L NEAR	02FB	_TEXT
+A4 . . . . . . . . . . . . . . .  	L NEAR	04E6	_TEXT
+AGAIN  . . . . . . . . . . . . .  	L NEAR	07C8	_TEXT
+AGAIN1 . . . . . . . . . . . . .  	L NEAR	0751	_TEXT
+
+B1 . . . . . . . . . . . . . . .  	L NEAR	0230	_TEXT
+B10  . . . . . . . . . . . . . .  	L NEAR	034E	_TEXT
+B11  . . . . . . . . . . . . . .  	L NEAR	0368	_TEXT
+B12  . . . . . . . . . . . . . .  	L NEAR	0382	_TEXT
+B13  . . . . . . . . . . . . . .  	L NEAR	039C	_TEXT
+B14  . . . . . . . . . . . . . .  	L NEAR	03D2	_TEXT
+B15  . . . . . . . . . . . . . .  	L NEAR	03EC	_TEXT
+B16  . . . . . . . . . . . . . .  	L NEAR	0406	_TEXT
+B17  . . . . . . . . . . . . . .  	L NEAR	0420	_TEXT
+B18  . . . . . . . . . . . . . .  	L NEAR	043A	_TEXT
+B19  . . . . . . . . . . . . . .  	L NEAR	0473	_TEXT
+B2 . . . . . . . . . . . . . . .  	L NEAR	024A	_TEXT
+B20  . . . . . . . . . . . . . .  	L NEAR	048D	_TEXT
+B21  . . . . . . . . . . . . . .  	L NEAR	04A7	_TEXT
+B22  . . . . . . . . . . . . . .  	L NEAR	04C1	_TEXT
+B23  . . . . . . . . . . . . . .  	L NEAR	04DB	_TEXT
+B24  . . . . . . . . . . . . . .  	L NEAR	051F	_TEXT
+B25  . . . . . . . . . . . . . .  	L NEAR	0539	_TEXT
+B26  . . . . . . . . . . . . . .  	L NEAR	0553	_TEXT
+B27  . . . . . . . . . . . . . .  	L NEAR	056D	_TEXT
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Symbols-2
+
+
+B28  . . . . . . . . . . . . . .  	L NEAR	0587	_TEXT
+B29  . . . . . . . . . . . . . .  	L NEAR	05BD	_TEXT
+B3 . . . . . . . . . . . . . . .  	L NEAR	0264	_TEXT
+B30  . . . . . . . . . . . . . .  	L NEAR	05D7	_TEXT
+B31  . . . . . . . . . . . . . .  	L NEAR	05F1	_TEXT
+B32  . . . . . . . . . . . . . .  	L NEAR	060B	_TEXT
+B33  . . . . . . . . . . . . . .  	L NEAR	0625	_TEXT
+B34  . . . . . . . . . . . . . .  	L NEAR	065E	_TEXT
+B35  . . . . . . . . . . . . . .  	L NEAR	0678	_TEXT
+B36  . . . . . . . . . . . . . .  	L NEAR	0692	_TEXT
+B37  . . . . . . . . . . . . . .  	L NEAR	06AC	_TEXT
+B38  . . . . . . . . . . . . . .  	L NEAR	06C6	_TEXT
+B4 . . . . . . . . . . . . . . .  	L NEAR	027E	_TEXT
+B5 . . . . . . . . . . . . . . .  	L NEAR	02A3	_TEXT
+B6 . . . . . . . . . . . . . . .  	L NEAR	02BD	_TEXT
+B7 . . . . . . . . . . . . . . .  	L NEAR	02D7	_TEXT
+B8 . . . . . . . . . . . . . . .  	L NEAR	02F1	_TEXT
+B9 . . . . . . . . . . . . . . .  	L NEAR	0334	_TEXT
+BARLEN . . . . . . . . . . . . .  	L BYTE	00E4	_DATA
+BARWID . . . . . . . . . . . . .  	L BYTE	00E5	_DATA
+BUFFER1  . . . . . . . . . . . .  	L BYTE	0017	_DATA
+
+C1 . . . . . . . . . . . . . . .  	L NEAR	031A	_TEXT
+C2 . . . . . . . . . . . . . . .  	L NEAR	03B8	_TEXT
+C3 . . . . . . . . . . . . . . .  	L NEAR	0459	_TEXT
+C4 . . . . . . . . . . . . . . .  	L NEAR	0505	_TEXT
+C5 . . . . . . . . . . . . . . .  	L NEAR	05A3	_TEXT
+C6 . . . . . . . . . . . . . . .  	L NEAR	0644	_TEXT
+CENTX  . . . . . . . . . . . . .  	L WORD	00D6	_DATA
+CENTY  . . . . . . . . . . . . .  	L WORD	00D8	_DATA
+CHARARR1 . . . . . . . . . . . .  	L BYTE	0029	_DATA
+CHARARR2 . . . . . . . . . . . .  	L BYTE	0043	_DATA
+CLEAR  . . . . . . . . . . . . .  	L NEAR	010D	_TEXT
+COL1 . . . . . . . . . . . . . .  	L WORD	00DE	_DATA
+COL2 . . . . . . . . . . . . . .  	L WORD	00E2	_DATA
+COUNTER  . . . . . . . . . . . .  	NUMBER	000A	
+CURRENTTIME  . . . . . . . . . .  	L BYTE	00CF	_DATA
+
+D1 . . . . . . . . . . . . . . .  	L NEAR	027E	_TEXT
+D10  . . . . . . . . . . . . . .  	L NEAR	06C6	_TEXT
+D2 . . . . . . . . . . . . . . .  	L NEAR	02F1	_TEXT
+D3 . . . . . . . . . . . . . . .  	L NEAR	04DB	_TEXT
+D4 . . . . . . . . . . . . . . .  	L NEAR	039C	_TEXT
+D5 . . . . . . . . . . . . . . .  	L NEAR	043A	_TEXT
+D6 . . . . . . . . . . . . . . .  	L NEAR	04DB	_TEXT
+D7 . . . . . . . . . . . . . . .  	L NEAR	06C6	_TEXT
+D8 . . . . . . . . . . . . . . .  	L NEAR	0625	_TEXT
+D9 . . . . . . . . . . . . . . .  	L NEAR	0587	_TEXT
+DOWN . . . . . . . . . . . . . .  	L NEAR	07A1	_TEXT
+DOWN2  . . . . . . . . . . . . .  	L NEAR	0765	_TEXT
+
+E1 . . . . . . . . . . . . . . .  	L NEAR	0311	_TEXT
+E2 . . . . . . . . . . . . . . .  	L NEAR	03AF	_TEXT
+E3 . . . . . . . . . . . . . . .  	L NEAR	0450	_TEXT
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Symbols-3
+
+
+E4 . . . . . . . . . . . . . . .  	L NEAR	04FC	_TEXT
+E5 . . . . . . . . . . . . . . .  	L NEAR	059A	_TEXT
+E6 . . . . . . . . . . . . . . .  	L NEAR	063B	_TEXT
+ESCAPE . . . . . . . . . . . . .  	L NEAR	0108	_TEXT
+
+FLUSHKEYBUFFER . . . . . . . . .  	N PROC	0B7F	_TEXT	Length = 0007
+
+HORIZFLAG  . . . . . . . . . . .  	L WORD	00D4	_DATA
+
+LEFT . . . . . . . . . . . . . .  	L NEAR	07C4	_TEXT
+LEFT2  . . . . . . . . . . . . .  	L NEAR	078B	_TEXT
+
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	_TEXT	Length = 08A3
+MAIN_LOOP  . . . . . . . . . . .  	L NEAR	01DF	_TEXT
+MOVEDOWN . . . . . . . . . . . .  	L NEAR	0883	_TEXT
+MOVEDOWN1  . . . . . . . . . . .  	N PROC	0A11	_TEXT	Length = 00B7
+MOVEDOWN2  . . . . . . . . . . .  	N PROC	095A	_TEXT	Length = 00B7
+MOVEDOWN22 . . . . . . . . . . .  	L NEAR	0893	_TEXT
+MOVEUP . . . . . . . . . . . . .  	L NEAR	0863	_TEXT
+MOVEUP1  . . . . . . . . . . . .  	N PROC	08A3	_TEXT	Length = 00B7
+MOVEUP2  . . . . . . . . . . . .  	N PROC	0AC8	_TEXT	Length = 00B7
+MOVEUP22 . . . . . . . . . . . .  	L NEAR	0873	_TEXT
+MSG1 . . . . . . . . . . . . . .  	L BYTE	0000	_DATA
+MSG2 . . . . . . . . . . . . . .  	L BYTE	005D	_DATA
+MSG4 . . . . . . . . . . . . . .  	L BYTE	007A	_DATA
+MSG5 . . . . . . . . . . . . . .  	L BYTE	0095	_DATA
+MSG6 . . . . . . . . . . . . . .  	L BYTE	00AC	_DATA
+MYLOOP1  . . . . . . . . . . . .  	L NEAR	005D	_TEXT
+MYLOOP2  . . . . . . . . . . . .  	L NEAR	0068	_TEXT
+MYLOOP4  . . . . . . . . . . . .  	L NEAR	00F4	_TEXT
+MY_LOOP  . . . . . . . . . . . .  	L NEAR	084A	_TEXT
+
+NEXT . . . . . . . . . . . . . .  	L NEAR	07AC	_TEXT
+NEXT2  . . . . . . . . . . . . .  	L NEAR	0790	_TEXT
+NEXT5  . . . . . . . . . . . . .  	L NEAR	0790	_TEXT
+NEXT6  . . . . . . . . . . . . .  	L NEAR	0772	_TEXT
+NEXT7  . . . . . . . . . . . . .  	L NEAR	0754	_TEXT
+NEXTA  . . . . . . . . . . . . .  	L NEAR	0072	_TEXT
+NEXTTIME . . . . . . . . . . . .  	L BYTE	00D0	_DATA
+
+RAD  . . . . . . . . . . . . . .  	L WORD	00DA	_DATA
+RAD1 . . . . . . . . . . . . . .  	L WORD	00EE	_DATA
+RAD2 . . . . . . . . . . . . . .  	L WORD	00F2	_DATA
+RIGHT  . . . . . . . . . . . . .  	L NEAR	07BD	_TEXT
+RIGHT2 . . . . . . . . . . . . .  	L NEAR	0783	_TEXT
+ROW1 . . . . . . . . . . . . . .  	L WORD	00DC	_DATA
+ROW2 . . . . . . . . . . . . . .  	L WORD	00E0	_DATA
+
+SPEED  . . . . . . . . . . . . .  	L BYTE	00D1	_DATA
+STAY . . . . . . . . . . . . . .  	L NEAR	0005	_TEXT
+
+TEMP1  . . . . . . . . . . . . .  	L WORD	00E8	_DATA
+TEMP2  . . . . . . . . . . . . .  	L WORD	00EA	_DATA
+TEMP3  . . . . . . . . . . . . .  	L WORD	00EC	_DATA
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Symbols-4
+
+
+TEMP4  . . . . . . . . . . . . .  	L WORD	00F0	_DATA
+
+UP . . . . . . . . . . . . . . .  	L NEAR	07A8	_TEXT
+UP2  . . . . . . . . . . . . . .  	L NEAR	076D	_TEXT
+
+VALUE  . . . . . . . . . . . . .  	L WORD	00E6	_DATA
+VERTICALFLAG . . . . . . . . . .  	L WORD	00D2	_DATA
+
+??0000 . . . . . . . . . . . . .  	L NEAR	0133	_TEXT
+??0001 . . . . . . . . . . . . .  	L NEAR	0133	_TEXT
+??0002 . . . . . . . . . . . . .  	L NEAR	015E	_TEXT
+??0003 . . . . . . . . . . . . .  	L NEAR	015E	_TEXT
+??0004 . . . . . . . . . . . . .  	L NEAR	0183	_TEXT
+??0005 . . . . . . . . . . . . .  	L NEAR	0183	_TEXT
+??0006 . . . . . . . . . . . . .  	L NEAR	01A5	_TEXT
+??0007 . . . . . . . . . . . . .  	L NEAR	01A5	_TEXT
+??0008 . . . . . . . . . . . . .  	L NEAR	01C7	_TEXT
+??0009 . . . . . . . . . . . . .  	L NEAR	01C7	_TEXT
+??000A . . . . . . . . . . . . .  	L NEAR	06FD	_TEXT
+??000B . . . . . . . . . . . . .  	L NEAR	06FD	_TEXT
+??000C . . . . . . . . . . . . .  	L NEAR	0721	_TEXT
+??000D . . . . . . . . . . . . .  	L NEAR	0727	_TEXT
+??000E . . . . . . . . . . . . .  	L NEAR	0803	_TEXT
+??000F . . . . . . . . . . . . .  	L NEAR	0803	_TEXT
+??0010 . . . . . . . . . . . . .  	L NEAR	0827	_TEXT
+??0011 . . . . . . . . . . . . .  	L NEAR	082D	_TEXT
+??0012 . . . . . . . . . . . . .  	L NEAR	08B3	_TEXT
+??0013 . . . . . . . . . . . . .  	L NEAR	08B3	_TEXT
+??0014 . . . . . . . . . . . . .  	L NEAR	08DE	_TEXT
+??0015 . . . . . . . . . . . . .  	L NEAR	08DE	_TEXT
+??0016 . . . . . . . . . . . . .  	L NEAR	0913	_TEXT
+??0017 . . . . . . . . . . . . .  	L NEAR	0913	_TEXT
+??0018 . . . . . . . . . . . . .  	L NEAR	093E	_TEXT
+??0019 . . . . . . . . . . . . .  	L NEAR	093E	_TEXT
+??001A . . . . . . . . . . . . .  	L NEAR	096A	_TEXT
+??001B . . . . . . . . . . . . .  	L NEAR	096A	_TEXT
+??001C . . . . . . . . . . . . .  	L NEAR	0995	_TEXT
+??001D . . . . . . . . . . . . .  	L NEAR	0995	_TEXT
+??001E . . . . . . . . . . . . .  	L NEAR	09CA	_TEXT
+??001F . . . . . . . . . . . . .  	L NEAR	09CA	_TEXT
+??0020 . . . . . . . . . . . . .  	L NEAR	09F5	_TEXT
+??0021 . . . . . . . . . . . . .  	L NEAR	09F5	_TEXT
+??0022 . . . . . . . . . . . . .  	L NEAR	0A21	_TEXT
+??0023 . . . . . . . . . . . . .  	L NEAR	0A21	_TEXT
+??0024 . . . . . . . . . . . . .  	L NEAR	0A4C	_TEXT
+??0025 . . . . . . . . . . . . .  	L NEAR	0A4C	_TEXT
+??0026 . . . . . . . . . . . . .  	L NEAR	0A81	_TEXT
+??0027 . . . . . . . . . . . . .  	L NEAR	0A81	_TEXT
+??0028 . . . . . . . . . . . . .  	L NEAR	0AAC	_TEXT
+??0029 . . . . . . . . . . . . .  	L NEAR	0AAC	_TEXT
+??002A . . . . . . . . . . . . .  	L NEAR	0AD8	_TEXT
+??002B . . . . . . . . . . . . .  	L NEAR	0AD8	_TEXT
+??002C . . . . . . . . . . . . .  	L NEAR	0B03	_TEXT
+??002D . . . . . . . . . . . . .  	L NEAR	0B03	_TEXT
+Microsoft (R) Macro Assembler Version 5.10                  12/25/16 04:00:5
+                                                             Symbols-5
+
+
+??002E . . . . . . . . . . . . .  	L NEAR	0B38	_TEXT
+??002F . . . . . . . . . . . . .  	L NEAR	0B38	_TEXT
+??0030 . . . . . . . . . . . . .  	L NEAR	0B63	_TEXT
+??0031 . . . . . . . . . . . . .  	L NEAR	0B63	_TEXT
+@CODE  . . . . . . . . . . . . .  	TEXT  _TEXT		
+@CODESIZE  . . . . . . . . . . .  	TEXT  0		
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@DATASIZE  . . . . . . . . . . .  	TEXT  0		
+@FILENAME  . . . . . . . . . . .  	TEXT  project2		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+    948 Source  Lines
+   1987 Total   Lines
+    203 Symbols
+
+  47810 + 404153 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

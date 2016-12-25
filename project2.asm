@@ -17,17 +17,16 @@ SharingAxes macro
 
 ;send
 
-
 mov bx,offset row1
 mov si,offset row2
 MOV DX,3fdh
-P1:
+P2:
 in al,dx
 test al,00100000b
-jz P1
+jz P2
 
 mov dx,3f8h
-mov al,[bx]
+mov al,[si]
 out dx,al
 
 ;-----------------
@@ -37,15 +36,15 @@ out dx,al
 ;int 21h
 
 ;recieve
-X1:
-mov al,[si]
+X2:
+mov al,[bx]
 mov dx,3fdh
 in al,dx
 test al,00000001b
-jz X1
+jz X2
 mov dx,3f8h
 in al,dx
-mov [si],al
+mov [bx],al
 
 ;mov dl,al
 ;mov ah,02
@@ -772,7 +771,7 @@ int 21h
      drawline 255,3,30,140,80
 
    MAIN_LOOP: 
-   
+ 
  SharingAxes   
  BallMovement    
 ;kero------>start

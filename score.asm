@@ -1,113 +1,3 @@
-
-SharingAxes1 macro
-     mov dx,3fbh
-     MOV Al,10000000b
-     out dx,al
-
-     mov dx,3f8h
-     mov al,18h
-     OUT DX,al
-
-     MOV DX,3F9H
-     mov al,00h
-     OUT DX,al
-
-     MOV DX,3fbH
-     mov al,00011011b
-     OUT DX,al
-
-;send
-
-
-mov bx,offset row1
-mov si,offset row2
-MOV DX,3fdh
-P1:
-in al,dx
-test al,00100000b
-jz P1
-
-mov dx,3f8h
-mov al,[bx]
-out dx,al
-
-;-----------------
-
-;mov dl,al
-;mov ah,02
-;int 21h
-
-;recieve
-X1:
-mov al,[si]
-mov dx,3fdh
-in al,dx
-test al,00000001b
-jz X1
-mov dx,3f8h
-in al,dx
-mov [si],al
-
-;mov dl,al
-;mov ah,02
-;int 21h
-endm
-
-SharingAxes2 macro
-     mov dx,3fbh
-     MOV Al,10000000b
-     out dx,al
-
-     mov dx,3f8h
-     mov al,18h
-     OUT DX,al
-
-     MOV DX,3F9H
-     mov al,00h
-     OUT DX,al
-
-     MOV DX,3fbH
-     mov al,00011011b
-     OUT DX,al
-
-;send
-
-
-mov bx,offset row1
-mov si,offset row2
-MOV DX,3fdh
-P1:
-in al,dx
-test al,00100000b
-jz P1
-
-mov dx,3f8h
-mov al,[si]
-out dx,al
-
-;-----------------
-
-;mov dl,al
-;mov ah,02
-;int 21h
-
-;recieve
-X1:
-mov al,[bx]
-mov dx,3fdh
-in al,dx
-test al,00000001b
-jz X1
-mov dx,3f8h
-in al,dx
-mov [bx],al
-
-;mov dl,al
-;mov ah,02
-;int 21h
-endm
-
-
 BallMovement macro
 
 ;top of screen
@@ -510,8 +400,8 @@ B33:
 D8:
 
 ;Bottom of paddle 
-mov ax,row2
-mov bx,row2
+mov ax,row1
+mov bx,row1
 add ax,20
 add bx,30
 cmp centy,ax
@@ -1476,12 +1366,9 @@ startgame:
 	 ;;----------------------------------------------------------------------------------printing score
 	  printingThescores 
 ;-------------------------------------------------------------------------------------printing score
-   MAIN_LOOP:
-SharingAxes1    
+   MAIN_LOOP:      
  BallMovement    
 ;kero------>start
- drawline BarWid,140,col1,0,00h      ;ocount,incount,col,row,color  ->this draw left stick
-     drawline  BarWid,140,col2,0,00h
  drawcir centy,centx,4,00  ;cenx,ceny,raduis,colour
 mov ah,2ch
 int 21h
@@ -1557,8 +1444,7 @@ Left:dec centx
 Again: 
 mov CurrentTime , dl
 
- drawline BarWid,BarLen,col1,row1,0ah      ;ocount,incount,col,row,color  ->this draw left stick
-     drawline  BarWid,BarLen,col2,row2,0Ah
+
 drawcir centy,centx,4,15  ;cenx,ceny,raduis,colour
 ;kero------>end
 
@@ -1617,8 +1503,8 @@ jmp playing
 
 ;--------------------------------------------------------------------------------------------------score start
 playing:
-
 mov ax,BarWid   ;the width of the stick
+
 mov bx,col1
 sub bx,ax
 mov endx1,bx   ; ----------- the position  of the  leftstick 
